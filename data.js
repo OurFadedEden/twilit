@@ -237,7 +237,7 @@ const SEED = {
       "title": "Prompt",
       "preview": "PW: 계정생일 8자리",
       "lead": "",
-      "lock": "19960901",
+      "lock": "",
       "img": "",
       "body": "[도준]\n\n1. Novel Ai\n\nMale, short hair, white hair, pixie cut, gold eyes, tareme, sharp eyes, white eyelashes, long eyelashes, cute face, kindness, 0.8::drowsiness::, handsome, pure skin, pale skin, 8K, \n\ndenim jacket, white sleeveless, black casual pants, white sneakers,\n\n2. Seaart\n\n1 Man, solo, white hair, gold eyes, cute face, soft smile, cute, handsome, pure skin, 8K,\n\ndenim jacket, white t-shirt (or sleeveless), black casual pants,\n\n[재준]\n\n1. Novel ai\n\nMale, mature male, black hair, pixie cut, full bangs, short hair, gold eyes, tsurime, half closed eyes, Sanpaku eyes, handsome, fang, slightly pointed teeth, pure skin, pale skin, confident, arrogant, 8k, sharp eyes, delightful, playful, a cold impression, muscular, big bast,\n\n[의상]\n\nblack admiral hat, 2::overcoat::, unbuttoned black military long coat, black uniform with brass button, black gloves, black military boots,\n\n2. SeaArt\n\n1 Man, solo, black hair, 0.5::short hair::, gold eyes, sharp eyes, handsome, playful, a cold impression, confident, 1.5::cooltone skin::, 0.5::muscular::, pure skin, 0.8::pale skin::, slightly pointed teeth, one fang, soft smile, Vibrant\n\nblack admiral hat, overcoat, unbuttoned black long coat, black dress shirt, black military pants, black gloves, light blue sky background, upper body"
     },
