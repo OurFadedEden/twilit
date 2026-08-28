@@ -375,7 +375,7 @@ const SEED = {
           "note": "JIHA•JAENAN"
         },
         {
-          "name": "JGTG",
+          "name": "FALL INTO YOU_EYE OF THE STORM",
           "url": "https://seojaehun_hantaehwi.luv3r.me/",
           "banner": "images/햇살배너.jpeg",
           "note": "JGTG"
