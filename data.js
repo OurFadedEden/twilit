@@ -306,7 +306,7 @@ const SEED = {
           "note": "RDI•KIREI"
         },
         {
-          "name": "우연이 쌓이면 필연",
+          "name": "Operation: Celestial Serenity",
           "url": "https://seimos-archive.luv3r.me/",
           "banner": "images/세이모스배너.jpeg",
           "note": "SEIMOS"
