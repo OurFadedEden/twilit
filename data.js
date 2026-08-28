@@ -310,13 +310,13 @@ const SEED = {
           "url": "https://seimos-archive.luv3r.me/",
           "banner": "images/세이모스배너.jpeg",
           "note": "SEIMOS"
-        }
+        },
         {
           "name": "My universe",
           "url": "https://jh_0417.luv3r.me/",
           "banner": "images/지하배너.jpeg",
           "note": "JIHA•JAENAN"
-                  }
+          }
       ]
     },
     {
