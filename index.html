@@ -2305,46 +2305,16 @@ let bootRun = true, bubbles = [], bubBurst = 0;
   function size(){ c.width = innerWidth; c.height = innerHeight; }
   size(); addEventListener('resize', size);
 
-  /* 잠겨 있는 그림들 — 수층 이미지를 흐리게 띄움 */
-  const pool = [];
-  ((site.strata||[]).map(x=>x.img).filter(Boolean)).forEach((src,i)=>{
-    const im = new Image();
-    im.src = src;
-    im.onload = ()=>{
-      pool.push(im);
-      /* 불러오는 즉시 화면 곳곳에 띄움 — 부팅이 짧아도 보이도록 */
-      for(let k=0;k<2;k++){
-        const r = 30 + Math.random()*34;
-        bubbles.push({
-          x: Math.random()*c.width,
-          y: Math.random()*c.height*1.1,
-          r,
-          vy: -(0.32 + Math.random()*0.4),
-          drift:(Math.random()-.5)*0.18,
-          ph:Math.random()*Math.PI*2,
-          a:.20 + Math.random()*0.11,
-          img: im,
-          spin:(Math.random()-.5)*0.0015,
-          ang: Math.random()*0.4-0.2
-        });
-      }
-    };
-  });
-
   function spawn(rush){
-    /* 가끔 사진 기포 */
-    const useImg = pool.length && Math.random() < 0.16;
-    const r = useImg ? (30 + Math.random()*34) : (1.5 + Math.random()*7);
+    const r = 1.5 + Math.random()*7;
     bubbles.push({
       x: Math.random()*c.width,
       y: c.height + r + (rush ? Math.random()*c.height*0.7 : 0),
       r,
-      vy: -(0.25 + Math.random()*0.75) * (useImg ? 0.52 : (r/4 + .6)) * (rush ? 2.6 : 1),
-      drift: (Math.random()-.5)*(useImg ? 0.18 : 0.5),
+      vy: -(0.25 + Math.random()*0.75) * (r/4 + .6) * (rush ? 2.6 : 1),
+      drift: (Math.random()-.5)*0.5,
       ph: Math.random()*Math.PI*2,
-      a: useImg ? (.20 + Math.random()*0.11) : (.12 + Math.random()*0.3),
-      img: useImg ? pool[(Math.random()*pool.length)|0] : null,
-      spin: (Math.random()-.5)*0.0015
+      a: .12 + Math.random()*0.3
     });
   }
   for(let i=0;i<18;i++){ spawn(); bubbles[i].y = Math.random()*c.height; }
@@ -2358,39 +2328,6 @@ let bootRun = true, bubbles = [], bubBurst = 0;
       b.y += b.vy; b.ph += .04;
       b.x += Math.sin(b.ph)*0.5 + b.drift;
       if(b.y < -b.r*2) return false;
-
-      /* 사진 기포 — 아주 흐리고 어둡게, 형태만 */
-      if(b.img){
-        b.ang = (b.ang||0) + b.spin;
-        /* 화면 끝에서 서서히 나타나고 사라짐 */
-        const fadeIn  = Math.min(1, (c.height + b.r - b.y) / (c.height*0.14));
-        const fadeOut = Math.min(1, (b.y + b.r*2) / (c.height*0.22));
-        /* 수면에 가까울수록 빛에 씻겨 사라짐 */
-        const surf = Math.min(1, Math.max(0, (b.y - c.height*0.12) / (c.height*0.3)));
-        const al = b.a * Math.max(0, Math.min(fadeIn, fadeOut)) * (0.5 + surf*0.5);
-        if(al > 0.004){
-          x.save();
-          x.globalAlpha = al;
-          x.translate(b.x, b.y);
-          x.rotate(b.ang);
-          x.beginPath(); x.arc(0,0,b.r,0,Math.PI*2); x.clip();
-          const canFilter = ('filter' in x);
-          if(canFilter) x.filter = 'blur(4.5px) saturate(.45) brightness(.68)';
-          const w = b.r*2, ratio = b.img.naturalHeight ? b.img.naturalWidth/b.img.naturalHeight : 1;
-          const dw = ratio >= 1 ? w*ratio : w;
-          const dh = ratio >= 1 ? w : w/ratio;
-          x.drawImage(b.img, -dw/2, -dh/2, dw, dh);
-          if(canFilter) x.filter = 'none';
-          /* 물방울 막 느낌 */
-          const gg = x.createRadialGradient(0,0,b.r*0.52, 0,0,b.r);
-          gg.addColorStop(0,'rgba(4,10,18,0)');
-          gg.addColorStop(.8,'rgba(4,10,18,.45)');
-          gg.addColorStop(1,'rgba(4,10,18,1)');
-          x.fillStyle = gg; x.fillRect(-b.r,-b.r,b.r*2,b.r*2);
-          x.restore();
-        }
-        return true;
-      }
 
       /* 물방울 — 테두리와 작은 하이라이트 */
       x.beginPath(); x.arc(b.x, b.y, b.r, 0, Math.PI*2);
