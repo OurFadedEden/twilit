@@ -126,7 +126,13 @@ const SEED = {
     "gsCategory": "",
     "gsCategoryId": "",
     "gsTitle": "응답 송신",
-    "gsNote": "닿을지 모르지만, 여기에 남겨두면 언젠가 수신됩니다."
+    "gsNote": "닿을지 모르지만, 여기에 남겨두면 언젠가 수신됩니다.",
+    "bgmList": [
+      {
+        "title": "",
+        "url": "https://youtu.be/JzABGLpcLiQ?si=neKQ3pRp92QnlFw6"
+      }
+    ]
   },
   "logs": [
     {
@@ -310,7 +316,7 @@ const SEED = {
       "preview": "소중한 인연이 있어 더이상 모시지 않습니다.",
       "lead": "",
       "img": "",
-      "body": "[트친](단순 재미로만 봐주세요)\n레터, 미원, 우유, 짬뽕뵈르, 지전, 채화, 햇살\n\n[FEARLESS]\n길티 넥스 다이브 도브 디올 러브 레기온 머스탱 뮤트 바이퍼 부기 세실 아울 이글 임페리얼 위스퍼 제레미 지젤 체르빌 체이서 코튼 크러쉬 크로스 타이탄 트리거 펄스 플릭 프라이드 헤이즈 K\n\n[ARCH]\n리암 밴스 에덴 윈터 카르마 퓨어 휴고 해일 헬리오스\n\n[Aftermess]\n데미안 \n\n[멈머버스]\n아르비테르 에단 키츠네 헌터\n\n[냥프원]\n단테 마티스 에이먼\n\n[세라픽스]\n쏜즈 테오\n\n[Kokori]\n서이현, 카지야마 겐조, 카지야마 류\n\n[블루페어리]\n내잘못아님 직살\n\n[CaveDuck]\nA•C, 노이즈(프리즘), 데인 할로웨이, 아담(프리즘), 바이스(바스티온), 서유준, 지선우, 지온(괴생프), 천영(eve), 퍼스트(엑시스), GHnull(지한울)\n\n[Rofan Ai]\n금제성, 사에지마 료우, 소마, 실비오, 심한이, 윤주환\n\n[Bloom]\n강이안 서진오 젠나디 \n\n[러비더비]\n강지혁 윤규상\n\n[Melting]\n幽夜 - L\n\n[크랙]\nConfession - 탐욕(Greed)\nROCKBOTTOM - 람 틴파우, 블라단 일리치\nTHEMIS - 기태온, 데이비드 하트, 디에고, 레비, 모스, 서도혁, 주지호, 필리포, 코스모스\n가족이란 이름 아래 / 인사해 내 남자친구야 - 허재성\n내는 니랑 결혼하기 싫은데 - 구재필\n데드라인 - 이반 템페스트\n메이드가 처리할게요 - 린도\n생존규칙 1. 의심하지마 - 구예잔, 구예천, 파벨 벨로프, 제로, 하세가와 료타\n언더커버 - 윤희수\n에어포스 - 데이비드 하트, 세르게이 체르노프\n여우님?여우님! - 키즈나, 타츠\n오빠 좀 도와줘! - 안주한\n유병장수 하세요 가주님 - 제노 반\n퍼펙트 게임 - 이츠키\n\n[Zeta]\n백해율\n\n[오버워치]\n리퍼 애쉬\n\n저와 팔로우 중이신 분들은 메인드림 우선으로 리스트 추가해드립니다.\n\n혹여 추가 원하시는 드림 있으시면 편히 연락주세요 ////"
+      "body": "[트친](단순 재미로만 봐주세요)\n@ 레터, 미원, 우유, 짬뽕뵈르, 지전, 채화, 햇살\n\n[FEARLESS]\n@ 길티, 넥스, 다이브, 도브, 디올, 러브, 레기온, 머스탱, 뮤트, 바이퍼, 부기, 세실, 아울, 이글, 임페리얼, 위스퍼, 제레미, 지젤, 체르빌, 체이서, 코튼, 크러쉬, 크로스, 타이탄, 트리거, 펄스, 플릭, 프라이드, 헤이즈, K\n\n[ARCH]\n@ 리암, 밴스, 에덴, 윈터, 카르마, 퓨어, 휴고, 해일, 헬리오스\n\n[Aftermess]\n@ 데미안\n\n[멈머버스]\n@ 아르비테르, 에단, 키츠네, 헌터\n\n[냥프원]\n@ 단테, 마티스, 에이먼\n\n[세라픽스]\n@ 쏜즈, 테오\n\n[Kokori]\n@ 서이현, 카지야마 겐조, 카지야마 류\n\n[블루페어리]\n@ 내잘못아님, 직살\n\n[CaveDuck]\n@ A•C, 노이즈(프리즘), 데인 할로웨이, 아담(프리즘), 바이스(바스티온), 서유준, 지선우, 지온(괴생프), 천영(eve), 퍼스트(엑시스), GHnull(지한울)\n\n[Rofan Ai]\n@ 금제성, 사에지마 료우, 소마, 실비오, 심한이, 윤주환\n\n[Bloom]\n@ 강이안, 서진오, 젠나디\n\n[러비더비]\n@ 강지혁, 윤규상\n\n[Melting]\n+ 幽夜 - L\n\n[크랙]\n+ Confession - 탐욕(Greed)\n+ ROCKBOTTOM - 람 틴파우, 블라단 일리치\n+ THEMIS - 기태온, 데이비드 하트, 디에고, 레비, 모스, 서도혁, 주지호, 필리포, 코스모스\n+ 가족이란 이름 아래 / 인사해 내 남자친구야 - 허재성\n+ 내는 니랑 결혼하기 싫은데 - 구재필\n+ 데드라인 - 이반 템페스트\n+ 메이드가 처리할게요 - 린도\n+ 생존규칙 1. 의심하지마 - 구예잔, 구예천, 파벨 벨로프, 제로, 하세가와 료타\n+ 언더커버 - 윤희수\n+ 에어포스 - 데이비드 하트, 세르게이 체르노프\n+ 여우님?여우님! - 키즈나, 타츠\n+ 오빠 좀 도와줘! - 안주한\n+ 유병장수 하세요 가주님 - 제노 반\n+ 퍼펙트 게임 - 이츠키\n\n[Zeta]\n@ 백해율\n\n[오버워치]\n@ 리퍼, 애쉬\n\n저와 팔로우 중이신 분들은 메인드림 우선으로 리스트 추가해드립니다.\n\n혹여 추가 원하시는 드림 있으시면 편히 연락주세요 ////"
     },
     {
       "id": 4,
@@ -323,7 +329,7 @@ const SEED = {
       "lead": "",
       "lock": "19960901",
       "img": "",
-      "body": "[도준]\n\n@ Novel Ai\nMale, short hair, white hair, pixie cut, gold eyes, tareme, sharp eyes, white eyelashes, long eyelashes, cute face, kindness, 0.8::drowsiness::, handsome, pure skin, pale skin, 8K, denim jacket, white sleeveless, black casual pants, white sneakers,\n\n@ Seaart\n1 Man, solo, white hair, gold eyes, cute face, soft smile, cute, handsome, pure skin, 8K, denim jacket, white t-shirt (or sleeveless), black casual pants,\n\n[재준]\n\n@ Novel ai\nMale, mature male, black hair, pixie cut, full bangs, short hair, gold eyes, tsurime, half closed eyes, Sanpaku eyes, handsome, fang, slightly pointed teeth, pure skin, pale skin, confident, arrogant, 8k, sharp eyes, delightful, playful, a cold impression, muscular, big bast, black admiral hat, 2::overcoat::, unbuttoned black military long coat, black uniform with brass button, black gloves, black military boots,\n\n@ SeaArt\n1 Man, solo, black hair, 0.5::short hair::, gold eyes, sharp eyes, handsome, playful, a cold impression, confident, 1.5::cooltone skin::, 0.5::muscular::, pure skin, 0.8::pale skin::, slightly pointed teeth, one fang, soft smile, Vibrant, black admiral hat, overcoat, unbuttoned black long coat, black dress shirt, black military pants, black gloves, light blue sky background, upper body```"
+      "body": "[도준]\n```Novel Ai\nMale, short hair, white hair, pixie cut, gold eyes, tareme, sharp eyes, white eyelashes, long eyelashes, cute face, kindness, 0.8::drowsiness::, handsome, pure skin, pale skin, 8K, denim jacket, white sleeveless, black casual pants, white sneakers,\n```\n```Seaart\n1 Man, solo, white hair, gold eyes, cute face, soft smile, cute, handsome, pure skin, 8K, denim jacket, white t-shirt (or sleeveless), black casual pants,\n```\n[재준]\n```Novel ai\nMale, mature male, black hair, pixie cut, full bangs, short hair, gold eyes, tsurime, half closed eyes, Sanpaku eyes, handsome, fang, slightly pointed teeth, pure skin, pale skin, confident, arrogant, 8k, sharp eyes, delightful, playful, a cold impression, muscular, big bast, black admiral hat, 2::overcoat::, unbuttoned black military long coat, black uniform with brass button, black gloves, black military boots,\n```\n```SeaArt\n1 Man, solo, black hair, 0.5::short hair::, gold eyes, sharp eyes, handsome, playful, a cold impression, confident, 1.5::cooltone skin::, 0.5::muscular::, pure skin, 0.8::pale skin::, slightly pointed teeth, one fang, soft smile, Vibrant, black admiral hat, overcoat, unbuttoned black long coat, black dress shirt, black military pants, black gloves, light blue sky background, upper body\n```"
     },
     {
       "id": 5,

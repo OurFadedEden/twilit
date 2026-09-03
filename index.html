@@ -269,6 +269,43 @@ body.locked{overflow:hidden;height:100vh;}
   text-align:right;font-variant-numeric:tabular-nums;}
 .strip-meta b{display:block;color:var(--signal);font-weight:400;font-size:var(--t-label);transition:color .6s;}
 .strip-meta b.deep{color:var(--tide);}
+/* ── BGM 플레이어 ── */
+.bgm-wrap{position:relative;flex:0 0 auto;display:flex;align-items:center;gap:5px;}
+.bgm-nav{background:none;border:1px solid var(--line);color:var(--static);
+  font-family:var(--mono);font-size:var(--t-micro);padding:7px 8px;cursor:pointer;transition:.25s;}
+.bgm-nav:disabled{opacity:.25;cursor:default;}
+@media (hover:hover){ .bgm-nav:not(:disabled):hover{border-color:rgba(232,176,75,.5);color:var(--signal);} }
+/* 곡 제목이 흐르는 창 */
+.bgm-now{overflow:hidden;max-width:0;opacity:0;
+  transition:max-width .6s cubic-bezier(.16,1,.3,1), opacity .5s;
+  font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-tight);
+  color:var(--tide);white-space:nowrap;}
+.bgm-now.on{max-width:170px;opacity:1;}
+.bgm-now .rail-t{display:inline-flex;animation:bgmSlide 16s linear infinite;}
+.bgm-now .rail-t span{padding-right:34px;}
+@keyframes bgmSlide{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+/* 곡 목록 */
+.bgm-list{position:absolute;top:calc(100% + 9px);right:0;z-index:41;min-width:210px;
+  max-width:min(300px, calc(100vw - 32px));max-height:min(50vh,320px);overflow-y:auto;
+  background:linear-gradient(165deg, rgba(10,20,32,.98), rgba(5,10,18,.98));
+  border:1px solid rgba(232,176,75,.3);box-shadow:0 12px 34px rgba(0,0,0,.7);
+  opacity:0;visibility:hidden;transform:translateY(-6px);
+  transition:opacity .3s, visibility .3s, transform .3s;}
+.bgm-list.on{opacity:1;visibility:visible;transform:none;}
+.bgm-list .hd{padding:9px 12px;border-bottom:1px solid rgba(58,70,84,.4);
+  font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-mid);color:var(--static);}
+.bgm-list button{display:flex;width:100%;gap:9px;align-items:baseline;
+  background:none;border:none;border-bottom:1px solid rgba(58,70,84,.18);
+  color:var(--ink);text-align:left;padding:11px 12px;cursor:pointer;transition:.25s;
+  font-size:var(--t-small);}
+.bgm-list button .no{font-family:var(--mono);font-size:var(--t-micro);
+  color:var(--static);flex:0 0 auto;font-variant-numeric:tabular-nums;}
+.bgm-list button .tt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bgm-list button.cur{color:var(--signal);}
+.bgm-list button.cur .no{color:var(--signal);}
+@media (hover:hover){ .bgm-list button:hover{background:rgba(232,176,75,.06);color:var(--signal);} }
+@media (max-width:600px){ .bgm-now.on{max-width:92px;} }
+
 .bgm-btn{flex:0 0 auto;background:none;border:1px solid var(--line);color:var(--static);
   font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-tight);
   padding:7px 11px;cursor:pointer;transition:.3s;white-space:nowrap;}
@@ -735,6 +772,10 @@ img{ -webkit-user-drag:none;user-drag:none;user-select:none;
 .tl-item::before{content:'';position:absolute;left:calc(-1 * var(--s4) + 2px);top:7px;
   width:7px;height:7px;border-radius:50%;background:var(--void);
   border:1px solid var(--signal);box-shadow:0 0 8px rgba(232,176,75,.5);}
+.tl-item .wi{position:relative;margin:9px 0 0;overflow:hidden;
+  border:1px solid rgba(58,70,84,.35);}
+.tl-item .wi img{width:100%;display:block;filter:saturate(.72) contrast(1.04) brightness(.85);}
+.tl-item .wi + .ws{margin-top:11px;}
 .tl-item .wh{font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-tight);
   color:var(--tide);font-variant-numeric:tabular-nums;}
 .tl-item .ws{font-family:var(--serif);font-size:var(--t-lead);line-height:1.6;
@@ -791,6 +832,21 @@ img{ -webkit-user-drag:none;user-drag:none;user-select:none;
 .rt .act::before, .detail-txt .act::before{content:'';position:absolute;}
 /* 인라인 지문 */
 .rt .ia, .detail-txt .ia{color:var(--static);}
+
+/* 작품 — 이름 목록 */
+.rt .work{display:flex;gap:var(--s2);align-items:flex-start;
+  padding:9px 0;border-bottom:1px solid rgba(58,70,84,.18);}
+.rt .work:last-of-type{border-bottom:none;}
+.rt .work > b{flex:0 0 122px;font-family:var(--mono);font-size:var(--t-micro);
+  letter-spacing:var(--ls-tight);color:var(--tide);font-weight:400;
+  line-height:1.9;word-break:break-word;}
+.rt .work .who{flex:1;display:flex;flex-wrap:wrap;gap:4px;}
+.rt .work .who span{font-size:var(--t-small);color:var(--ink);
+  border:1px solid rgba(58,70,84,.45);padding:3px 8px;line-height:1.5;}
+@media (max-width:600px){
+  .rt .work{flex-direction:column;gap:6px;}
+  .rt .work > b{flex:none;}
+}
 
 /* 이름·키워드 칩 나열 */
 .rt .chips{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 var(--s3);}
@@ -876,7 +932,8 @@ img{ -webkit-user-drag:none;user-drag:none;user-select:none;
   font-size:var(--t-body);transition:.3s;}
 .b-links a:active{border-color:var(--signal);color:var(--signal);}
 .b-links .arrow{font-family:var(--mono);font-size:var(--t-micro);color:var(--static);}
-.b-friends{display:flex;flex-direction:column;gap:var(--s2);}
+.b-friends{display:grid;grid-template-columns:1fr;gap:var(--s2);}
+@media (min-width:560px){ .b-friends{grid-template-columns:1fr 1fr;} }
 .b-friend{display:block;text-decoration:none;border:1px solid var(--line-soft);
   padding:11px;transition:.35s;position:relative;overflow:hidden;}
 .b-friend:active{border-color:var(--signal);}
@@ -1273,7 +1330,14 @@ body.adm .dock{bottom:64px;}
 
 <div class="strip">
   <canvas id="wave"></canvas>
-  <button class="bgm-btn" id="bgmBtn" onclick="toggleBgm()">♪ BGM OFF</button>
+  <div class="bgm-wrap">
+    <div class="bgm-now" id="bgmNow"></div>
+    <button class="bgm-nav" id="bgmPrev" title="이전 곡">◂</button>
+    <button class="bgm-btn" id="bgmBtn" onclick="toggleBgm()">♪ BGM OFF</button>
+    <button class="bgm-nav" id="bgmNext" title="다음 곡">▸</button>
+    <button class="bgm-nav" id="bgmMenu" title="곡 목록">≡</button>
+    <div class="bgm-list" id="bgmList"></div>
+  </div>
   <div class="strip-meta"><b id="depthOut">0 M</b><span id="statusOut">SIGNAL CLEAR</span></div>
 </div>
 
@@ -1508,6 +1572,7 @@ body.adm .dock{bottom:64px;}
         <code>- 내용</code> → 점 목록<br>
         <code>&gt; 내용</code> → 인용<br>
         <code>@ 가, 나, 다</code> → 이름 칩 나열<br>
+        <code>+ 작품명 - 이름, 이름</code> → 작품별 이름 목록<br>
         <code>```</code> 로 감싸면 → 복사 버튼 달린 상자 (프롬프트용)</p>
       <textarea id="inBody" rows="12"></textarea>
     </div>
@@ -1568,6 +1633,7 @@ body.adm .dock{bottom:64px;}
       <p class="hint">한 줄에 하나씩 · <b>시점 : [소제목] 내용</b><br>
         소제목은 <code>[대괄호]</code>로 감싸면 크게 표시되고, 아래에 내용이 이어집니다.<br>
         내용 안에서 <code>\n</code> 을 쓰면 줄이 바뀝니다.<br>
+        <code>\nimg: images/사진.jpg</code> 를 넣으면 그 시점에 사진이 붙습니다.<br>
         소제목이 없으면 내용만 나옵니다.</p>
       <textarea id="inTimeline" rows="9" placeholder="2019.04 : [처음 만난 날] 그날 비가 왔다.\n우산은 하나뿐이었고.&#10;2021.08 : [같이 살기 시작] 짐은 적었다."></textarea>
       <label>창 제목</label>
@@ -1656,7 +1722,11 @@ body.adm .dock{bottom:64px;}
     <label>하단 흐르는 문구</label><p class="hint">한 줄에 하나씩</p><textarea id="sTicker" rows="3"></textarea>
 
     <h4>BGM</h4>
-    <label>유튜브 링크</label><input id="sBgm">
+    <p class="hint">한 줄에 한 곡씩 · <b>곡 제목 | 유튜브 링크</b><br>
+      제목을 빼고 링크만 써도 됩니다.<br>
+      두 곡 이상이면 상단에 이전·다음·목록 버튼이 생기고,<br>
+      곡이 끝나면 다음 곡으로 자동으로 넘어갑니다.</p>
+    <textarea id="sBgm" rows="6" placeholder="황혼이 잠기는 심해 | https://youtu.be/xxxxxxxxxxx&#10;두 번째 곡 | https://youtu.be/yyyyyyyyyyy"></textarea>
     <label>음량 (0–100)</label><input id="sBgmVol" type="number" min="0" max="100">
     <label>입장할 때 자동 재생 (1 = 켬 / 0 = 끔)</label><input id="sBgmAuto" type="number" min="0" max="1">
 
@@ -1980,7 +2050,7 @@ function tryEnter(){
 function enterSite(){
   if(entered) return;
   entered = true;
-  if(site.bgmAuto == 1 && ytId(site.bgmUrl)) toggleBgm();
+  if(site.bgmAuto == 1 && tracks().length) toggleBgm();
   document.getElementById('gate').classList.add('entered');
   document.body.classList.remove('locked');
   scrollTo(0,0);
@@ -1992,33 +2062,112 @@ function enterSite(){
 }
 
 /* ============ BGM ============ */
-let ytPlayer=null, ytReady=false, bgmOn=false;
+(function(){ const sc=document.createElement('script');
+  sc.src="https://www.youtube.com/iframe_api"; document.head.appendChild(sc); })();
+window.onYouTubeIframeAPIReady = ()=>{ ytReady = true; updateBgmBtn(); };
+let ytPlayer=null, ytReady=false, bgmOn=false, trackIdx=0;
+
 function ytId(u){ if(!u) return '';
-  const m = u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/|live\/)([A-Za-z0-9_-]{11})/);
-  return m ? m[1] : (u.length===11 ? u : ''); }
-(function(){ const s=document.createElement('script');
-  s.src="https://www.youtube.com/iframe_api"; document.head.appendChild(s); })();
-window.onYouTubeIframeAPIReady = ()=>{ ytReady = true; };
+  const m = String(u).match(/(?:youtu\.be\/|v=|embed\/|shorts\/|live\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : (String(u).trim().length===11 ? String(u).trim() : ''); }
+
+/* 재생 목록 — 새 형식(bgmList) 우선, 없으면 예전 한 곡(bgmUrl) */
+function tracks(){
+  const raw = (site.bgmList && site.bgmList.length)
+    ? site.bgmList
+    : (site.bgmUrl ? [{ title:'', url:site.bgmUrl }] : []);
+  return raw.map((t,i)=>({
+    title: (t.title||'').trim() || ('TRACK ' + String(i+1).padStart(2,'0')),
+    id: ytId(t.url)
+  })).filter(t=>t.id);
+}
+function curTrack(){ const L=tracks(); return L.length ? L[Math.min(trackIdx, L.length-1)] : null; }
+
 function toggleBgm(){
-  const id = ytId(site.bgmUrl);
-  if(!id){ toast("BGM이 설정되지 않았습니다"); return; }
+  const L = tracks();
+  if(!L.length){ toast("BGM이 설정되지 않았습니다"); return; }
   if(!ytReady){ toast("플레이어 준비 중입니다"); return; }
-  if(!ytPlayer){
-    ytPlayer = new YT.Player('ytPlayer', { height:'1', width:'1', videoId:id,
-      playerVars:{autoplay:1,loop:1,playlist:id,controls:0,disablekb:1,playsinline:1},
-      events:{ onReady:e=>{ e.target.setVolume(site.bgmVol||35); e.target.playVideo();
-        bgmOn=true; updateBgmBtn(); } } });
-    return;
-  }
+  if(!ytPlayer){ startTrack(trackIdx); return; }
   if(bgmOn){ ytPlayer.pauseVideo(); bgmOn=false; }
   else { ytPlayer.setVolume(site.bgmVol||35); ytPlayer.playVideo(); bgmOn=true; }
   updateBgmBtn();
 }
+function startTrack(i){
+  const L = tracks();
+  if(!L.length || !ytReady) return;
+  trackIdx = (i + L.length) % L.length;
+  const t = L[trackIdx];
+  const single = L.length === 1;
+  if(!ytPlayer){
+    ytPlayer = new YT.Player('ytPlayer', {
+      height:'1', width:'1', videoId:t.id,
+      playerVars:{ autoplay:1, controls:0, disablekb:1, playsinline:1,
+                   loop: single?1:0, playlist: single?t.id:undefined },
+      events:{
+        onReady: e=>{ e.target.setVolume(site.bgmVol||35); e.target.playVideo();
+                      bgmOn=true; updateBgmBtn(); },
+        /* 곡이 끝나면 다음 곡으로 */
+        onStateChange: e=>{ if(e.data === YT.PlayerState.ENDED && tracks().length > 1) nextTrack(); }
+      }
+    });
+  } else {
+    ytPlayer.loadVideoById(t.id);
+    ytPlayer.setVolume(site.bgmVol||35);
+    bgmOn = true;
+  }
+  updateBgmBtn();
+}
+function nextTrack(){ startTrack(trackIdx + 1); }
+function prevTrack(){ startTrack(trackIdx - 1); }
+
 function updateBgmBtn(){
+  const L = tracks();
   bgmBtn.textContent = bgmOn ? 'BGM ON' : '♪ BGM OFF';
   bgmBtn.classList.toggle('playing', bgmOn);
-  bgmBtn.style.opacity = ytId(site.bgmUrl) ? 1 : .45;
+  bgmBtn.style.opacity = L.length ? 1 : .45;
+
+  /* 곡 제목 — 재생 중이고 여러 곡일 때만 노출 */
+  const now = document.getElementById('bgmNow');
+  const t = curTrack();
+  if(bgmOn && t){
+    const line = t.title + '   ·   ';
+    now.innerHTML = `<span class="rail-t"><span>${esc(line)}</span><span>${esc(line)}</span></span>`;
+    now.classList.add('on');
+  } else now.classList.remove('on');
+
+  /* 앞뒤 버튼은 곡이 둘 이상일 때만 */
+  const multi = L.length > 1;
+  ['bgmPrev','bgmNext','bgmMenu'].forEach(id=>{
+    const b = document.getElementById(id);
+    b.style.display = multi ? '' : 'none';
+    b.disabled = !multi;
+  });
+  buildBgmList();
 }
+function buildBgmList(){
+  const box = document.getElementById('bgmList');
+  const L = tracks();
+  box.innerHTML = `<div class="hd">PLAYLIST — ${L.length} TRACKS</div>` +
+    L.map((t,i)=>`<button onclick="pickTrack(${i})" class="${i===trackIdx?'cur':''}">
+      <span class="no">${String(i+1).padStart(2,'0')}</span>
+      <span class="tt">${esc(t.title)}</span></button>`).join('');
+}
+function pickTrack(i){
+  document.getElementById('bgmList').classList.remove('on');
+  startTrack(i);
+}
+(function initBgmUI(){
+  document.getElementById('bgmPrev').addEventListener('click', prevTrack);
+  document.getElementById('bgmNext').addEventListener('click', nextTrack);
+  document.getElementById('bgmMenu').addEventListener('click', e=>{
+    e.stopPropagation();
+    document.getElementById('bgmList').classList.toggle('on');
+  });
+  document.addEventListener('click', e=>{
+    if(!e.target.closest('.bgm-wrap'))
+      document.getElementById('bgmList').classList.remove('on');
+  });
+})();
 
 /* ============ 부팅 ============ */
 /* 부팅 로그 — SITE 관리자에서 수정 가능 */
@@ -2270,6 +2419,8 @@ function inlineBody(l){
         const parts = splitTimeline(t.v);
         return `<div class="tl-item">
           <div class="wh">${esc(t.k)}</div>
+          ${parts.img ? `<div class="wi shot"><img src="${esc(parts.img)}" alt="">
+             <span class="mark a"></span><span class="mark d"></span></div>` : ''}
           ${parts.head ? `<div class="ws">${nl(parts.head)}</div>` : ''}
           ${parts.body ? `<div class="wt">${nl(parts.body)}</div>` : ''}
         </div>`;
@@ -2300,13 +2451,20 @@ function tlFade(el){
    [대괄호]로 감싸거나, 첫 줄만 쓰고 줄을 바꾸면 소제목이 됩니다 */
 function splitTimeline(raw){
   let t = String(raw||'').replace(/\\n/g, '\n').trim();
+  // img: 주소  — 어느 줄에 있어도 사진으로 빼냄
+  let img = '';
+  t = t.split('\n').filter(line=>{
+    const x = line.trim();
+    if(/^img\s*:/i.test(x)){ img = x.replace(/^img\s*:/i,'').trim(); return false; }
+    return true;
+  }).join('\n').trim();
   // [소제목] 형식
   const m = t.match(/^\[([^\]]+)\]\s*/);
-  if(m) return { head:m[1].trim(), body:t.slice(m[0].length).trim() };
+  if(m) return { img, head:m[1].trim(), body:t.slice(m[0].length).trim() };
   // 첫 줄 = 소제목
   const i = t.indexOf('\n');
-  if(i > -1) return { head:t.slice(0,i).trim(), body:t.slice(i+1).trim() };
-  return { head:'', body:t };
+  if(i > -1) return { img, head:t.slice(0,i).trim(), body:t.slice(i+1).trim() };
+  return { img, head:'', body:t };
 }
 
 /* 날짜에서 경과일/남은일 계산 */
@@ -2357,6 +2515,18 @@ function richText(raw){
     }
     // 구분선
     if(/^-{3,}$/.test(t) || /^={3,}$/.test(t)){ flushAll(); out += '<hr>'; continue; }
+    // 작품 — 이름 목록 :  + 작품명 - 이름, 이름
+    if(t.startsWith('+ ')){
+      flushP(); flushB(); flushC();
+      const raw = t.slice(2).trim();
+      const m = raw.split(/\s+[-–—:]\s+/);
+      const label = (m[0]||'').trim();
+      const rest  = raw.slice(label.length).replace(/^\s*[-–—:]\s*/,'');
+      const names = rest.split(/[,\uFF0C]/).map(x=>x.trim()).filter(Boolean);
+      out += `<div class="work"><b>${esc(label)}</b><span class="who">` +
+             names.map(x=>`<span>${esc(x)}</span>`).join('') + `</span></div>`;
+      continue;
+    }
     // 칩 나열
     if(t.startsWith('@ ') || t.startsWith('@')){
       flushP(); flushB();
@@ -2750,7 +2920,10 @@ function openSite(){
   sGatePwd.value=site.gatePwd||''; sDenyText.value=site.denyText||'';
   sSideL.value=site.sideL; sSideR.value=site.sideR;
   sTicker.value=site.ticker.join('\n');
-  sBgm.value=site.bgmUrl; sBgmVol.value=site.bgmVol; sBgmAuto.value=site.bgmAuto;
+  sBgm.value = (site.bgmList && site.bgmList.length)
+    ? site.bgmList.map(t=> (t.title? t.title + ' | ' : '') + (t.url||'')).join('\n')
+    : (site.bgmUrl || '');
+  sBgmVol.value=site.bgmVol; sBgmAuto.value=site.bgmAuto;
   sCallsign.value=site.callsign; sIntroTitle.value=site.introTitle; sLede.value=site.lede;
   sPairAImg.value=A.img||''; sPairALabel.value=A.label||''; sPairAName.value=A.name||''; sPairALine.value=A.line||'';
   sPairBImg.value=B.img||''; sPairBLabel.value=B.label||''; sPairBName.value=B.name||''; sPairBLine.value=B.line||'';
@@ -2790,7 +2963,12 @@ function saveSite(){
   site.sideL=sSideL.value; site.sideR=sSideR.value;
   site.ticker=sTicker.value.split('\n').map(s=>s.trim()).filter(Boolean);
   if(!site.ticker.length) site.ticker=SEED.site.ticker;
-  site.bgmUrl=sBgm.value.trim();
+  site.bgmList = sBgm.value.split('\n').map(x=>x.trim()).filter(Boolean).map(line=>{
+    const i = line.lastIndexOf('|');
+    if(i > -1) return { title:line.slice(0,i).trim(), url:line.slice(i+1).trim() };
+    return { title:'', url:line };
+  }).filter(t=>t.url);
+  site.bgmUrl = site.bgmList.length ? site.bgmList[0].url : '';
   site.bgmVol=Math.max(0,Math.min(100,parseInt(sBgmVol.value)||35));
   site.bgmAuto=parseInt(sBgmAuto.value)===1?1:0;
   site.callsign=sCallsign.value; site.introTitle=sIntroTitle.value; site.lede=sLede.value;
