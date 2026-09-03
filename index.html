@@ -750,6 +750,18 @@ img{ -webkit-user-drag:none;user-drag:none;user-select:none;
 .rt blockquote{margin:0 0 var(--s3);padding:var(--s2) 0 var(--s2) var(--s3);
   border-left:2px solid rgba(232,176,75,.45);color:var(--paper);
   font-size:var(--t-lead);line-height:1.9;}
+/* 대사 · 지문 구분 */
+.rt .say, .detail-txt .say{display:block;position:relative;
+  margin:0 0 var(--s2);padding:2px 0 2px 15px;
+  color:var(--paper);font-size:1.04em;line-height:1.95;}
+.rt .say::before, .detail-txt .say::before{content:'';position:absolute;left:0;top:.55em;bottom:.55em;
+  width:2px;background:var(--signal);box-shadow:0 0 7px rgba(232,176,75,.4);}
+.rt .act, .detail-txt .act{display:block;margin:0 0 var(--s2);padding-left:15px;
+  color:var(--static);font-size:.95em;line-height:1.9;}
+.rt .act::before, .detail-txt .act::before{content:'';position:absolute;}
+/* 인라인 지문 */
+.rt .ia, .detail-txt .ia{color:var(--static);}
+
 /* 이름·키워드 칩 나열 */
 .rt .chips{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 var(--s3);}
 .rt .chips span{font-size:var(--t-small);color:var(--ink);
@@ -888,7 +900,22 @@ img{ -webkit-user-drag:none;user-drag:none;user-select:none;
   padding:3px 8px;cursor:pointer;transition:.25s;}
 @media (hover:hover){ .sonar-top button:hover{border-color:rgba(232,176,75,.5);color:var(--signal);} }
 
+/* 상단 텔레메트리 줄 */
+.sonar-tel{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3);margin-bottom:var(--s3);
+  font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-tight);
+  color:var(--static);font-variant-numeric:tabular-nums;}
+.sonar-tel span i{color:var(--tide);font-style:normal;}
+.sonar-tel .rec{display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:var(--signal);box-shadow:0 0 7px var(--signal);
+  animation:blink 1.4s ease-in-out infinite;margin-right:5px;vertical-align:middle;}
+
 /* 스코프 */
+.scope-shell{position:relative;padding:18px;}
+/* 방위 눈금 */
+.bearing{position:absolute;inset:0;pointer-events:none;}
+.bearing span{position:absolute;left:50%;top:50%;width:1px;height:50%;
+  transform-origin:50% 0;background:linear-gradient(180deg, rgba(111,168,196,.35) 0 7px, transparent 7px);}
+.bearing span.major{background:linear-gradient(180deg, rgba(232,176,75,.5) 0 11px, transparent 11px);}
 .scope{position:relative;width:100%;max-width:420px;aspect-ratio:1;margin:0 auto;
   border-radius:50%;overflow:hidden;
   background:radial-gradient(circle, rgba(10,26,42,.9) 0%, rgba(4,10,18,.95) 72%);
@@ -923,6 +950,32 @@ img{ -webkit-user-drag:none;user-drag:none;user-select:none;
   .blip:hover .pt{transform:scale(1.6);}
   .blip:hover .tag{opacity:1;}
 }
+/* 거리 라벨 */
+.scope .rng{position:absolute;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:var(--t-micro);letter-spacing:0;
+  color:rgba(111,168,196,.35);pointer-events:none;}
+/* 스윕 잔향 */
+.scope .echo{position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle, transparent 55%, rgba(111,168,196,.05) 100%);}
+/* 접점 목록 */
+.contacts{margin-top:var(--s3);border-top:1px solid rgba(58,70,84,.35);padding-top:var(--s3);}
+.contacts .ch{font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-mid);
+  color:var(--static);margin-bottom:var(--s2);}
+.contacts ul{list-style:none;display:flex;flex-direction:column;gap:1px;}
+.contacts li button{width:100%;background:none;border:1px solid rgba(58,70,84,.3);
+  color:var(--ink);cursor:pointer;padding:9px 11px;transition:.25s;
+  display:flex;align-items:center;gap:10px;text-align:left;}
+.contacts .no{font-family:var(--mono);font-size:var(--t-micro);color:var(--signal);
+  flex:0 0 auto;font-variant-numeric:tabular-nums;}
+.contacts .nm{flex:1;min-width:0;font-size:var(--t-small);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.contacts .sg{display:flex;gap:2px;align-items:flex-end;height:9px;flex:0 0 auto;}
+.contacts .sg i{width:2px;background:var(--tide);}
+.contacts li button:active{border-color:rgba(232,176,75,.5);}
+@media (hover:hover){
+  .contacts li button:hover{border-color:rgba(232,176,75,.45);background:rgba(232,176,75,.04);}
+  .contacts li button:hover .nm{color:var(--signal);}
+}
 .scope-hint{text-align:center;margin-top:var(--s3);
   font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-mid);
   color:var(--static);animation:blink 2.8s ease-in-out infinite;}
@@ -933,9 +986,13 @@ img{ -webkit-user-drag:none;user-drag:none;user-select:none;
 .scope-wrap.off{display:none;}
 .detail-cap{font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-mid);
   color:var(--signal);margin-bottom:var(--s2);}
-.detail-img{position:relative;margin-bottom:var(--s3);}
+.detail-img{position:relative;margin-bottom:var(--s3);display:flex;flex-direction:column;gap:6px;}
+.detail-img.multi{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));}
+.detail-img .shot{display:block;}
 .detail-img img{width:100%;display:block;filter:saturate(.78) contrast(1.05);}
-.detail-txt{font-size:var(--t-small);line-height:2.05;color:var(--ink);white-space:pre-line;}
+.detail-img.multi img{aspect-ratio:1;object-fit:cover;}
+.detail-txt{font-size:var(--t-small);line-height:2.05;color:var(--ink);}
+.detail-txt .rt{font-size:inherit;}
 .detail-nav{display:flex;align-items:center;gap:var(--s2);margin-top:var(--s4);
   padding-top:var(--s3);border-top:1px solid rgba(58,70,84,.4);
   font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-tight);color:var(--static);}
@@ -1286,16 +1343,36 @@ body.adm .dock{bottom:64px;}
     </div>
 
     <div class="scope-wrap" id="scopeWrap">
-      <div class="scope" id="scope">
-        <span class="rg r1"></span><span class="rg r2"></span><span class="rg r3"></span>
-        <span class="cr h"></span><span class="cr v"></span>
-        <span class="sw"></span>
-        <span class="grid-lbl" style="top:6px;left:50%;transform:translateX(-50%);">N</span>
-        <span class="grid-lbl" style="bottom:6px;left:50%;transform:translateX(-50%);">S</span>
-        <span class="grid-lbl" style="left:8px;top:50%;transform:translateY(-50%);">W</span>
-        <span class="grid-lbl" style="right:8px;top:50%;transform:translateY(-50%);">E</span>
+      <div class="sonar-tel">
+        <span><span class="rec"></span>ACTIVE PING</span>
+        <span>RANGE <i>3000</i>M</span>
+        <span>BRG <i id="telBrg">000</i>°</span>
+        <span>CONTACTS <i id="telNum">0</i></span>
+        <span id="telPos">34.12°N / 129.44°E</span>
+      </div>
+
+      <div class="scope-shell">
+        <div class="bearing" id="bearing"></div>
+        <div class="scope" id="scope">
+          <span class="rg r1"></span><span class="rg r2"></span><span class="rg r3"></span>
+          <span class="cr h"></span><span class="cr v"></span>
+          <span class="echo"></span>
+          <span class="sw"></span>
+          <span class="rng" style="top:12.5%;">-1000M</span>
+          <span class="rng" style="top:26.5%;">-2000M</span>
+          <span class="rng" style="top:40.5%;">-3000M</span>
+          <span class="grid-lbl" style="top:6px;left:50%;transform:translateX(-50%);">N</span>
+          <span class="grid-lbl" style="bottom:6px;left:50%;transform:translateX(-50%);">S</span>
+          <span class="grid-lbl" style="left:8px;top:50%;transform:translateY(-50%);">W</span>
+          <span class="grid-lbl" style="right:8px;top:50%;transform:translateY(-50%);">E</span>
+        </div>
       </div>
       <div class="scope-hint" id="scopeHint">신호를 눌러 확인</div>
+
+      <div class="contacts">
+        <div class="ch">CONTACT LIST</div>
+        <ul id="contactList"></ul>
+      </div>
     </div>
 
     <div class="detail" id="detail">
@@ -1581,13 +1658,18 @@ body.adm .dock{bottom:64px;}
     <label>종단 표식</label><input id="sEndMark">
 
     <h4>관측 기록 (레이더)</h4>
-    <p class="hint">왼쪽 아래 레이더를 누르면 열리는 창입니다.<br>
-      <b>한 자료에 세 줄씩</b>, 자료 사이는 <b>빈 줄</b>로 구분합니다.<br>
-      1줄 = 제목 / 2줄 = 이미지 주소 / 3줄부터 = 글<br>
-      이미지가 없으면 <code>-</code> 만 적으세요. 전부 비우면 창이 비어 있습니다.</p>
+    <p class="hint">왼쪽 아래 SONAR 버튼을 누르면 열리는 창입니다.<br><br>
+      <b>자료 사이는 <code>===</code> 한 줄로 구분</b>합니다.<br>
+      <code>[제목]</code> → 신호 이름<br>
+      <code>img: 주소1, 주소2</code> → 사진 (쉼표로 여러 장)<br>
+      나머지 줄 → 본문. <b>빈 줄과 긴 글 모두 됩니다.</b><br><br>
+      <b>본문 서식</b><br>
+      <code>"대사"</code> → 앰버 세로선이 붙은 대사<br>
+      <code>*지문*</code> → 흐린 지문 (문장 안에서도 됩니다)<br>
+      <code>[소제목]</code> · <code>- 목록</code> · <code>&gt; 인용</code> 도 사용 가능</p>
     <label>창 제목</label><input id="sScanTitle" placeholder="관측 기록">
     <label>자료</label>
-    <textarea id="sScans" rows="10" placeholder="SPECIMEN 01&#10;images/photo1.jpg&#10;여기에 설명을 적습니다.&#10;&#10;SPECIMEN 02&#10;-&#10;사진 없이 글만 넣을 수도 있어요."></textarea>
+    <textarea id="sScans" rows="14" placeholder="[SPECIMEN 01]&#10;img: images/a.jpg, images/b.jpg&#10;&#10;*그날은 비가 왔다.*&#10;&#10;&quot;아직 거기 있어?&quot;&#10;&#10;대답은 없었다.&#10;&#10;===&#10;&#10;[SPECIMEN 02]&#10;사진 없이 글만 넣어도 됩니다."></textarea>
 
     <h4>글자 크기</h4>
     <p class="hint">기본값이 100입니다. 숫자를 올리면 커지고 내리면 작아집니다.<br>
@@ -2238,15 +2320,27 @@ function richText(raw){
         .forEach(x=>chips.push(esc(x)));
       continue;
     }
+    // 지문 — 줄 전체가 *...* 또는 (...)
+    if((/^\*.+\*$/.test(t)) || (/^\(.+\)$/.test(t))){
+      flushAll();
+      out += `<span class="act">${esc(t.replace(/^[*(]|[*)]$/g,'').trim())}</span>`;
+      continue;
+    }
+    // 대사 — "..." 또는 「...」 로 시작
+    if(/^["“「']/.test(t)){
+      flushAll();
+      out += `<span class="say">${inlineAct(t)}</span>`;
+      continue;
+    }
     // 점 목록
-    if(/^[-·•*]\s+/.test(t)){ flushP(); flushC(); bullets.push(esc(t.replace(/^[-·•*]\s+/,''))); continue; }
+    if(/^[-·•]\s+/.test(t)){ flushP(); flushC(); bullets.push(esc(t.replace(/^[-·•]\s+/,''))); continue; }
     // 인용
     if(t.startsWith('> ')){ flushAll(); out += `<blockquote>${esc(t.slice(2))}</blockquote>`; continue; }
     // 빈 줄
     if(t === ''){ flushAll(); continue; }
     // 일반 문단
     flushB(); flushC();
-    para.push(esc(line));
+    para.push(inlineAct(line));
   }
   flushAll();
   return `<div class="rt">${out}</div>`;
@@ -2259,6 +2353,10 @@ function listVal(v){
             .map(x=>`<span class="pill">${nl(x)}</span>`).join('');
   }
   return nl(t);
+}
+/* 문장 안의 *지문* 을 흐리게 */
+function inlineAct(t){
+  return esc(t).replace(/\*([^*]+)\*/g, '<span class="ia">$1</span>');
 }
 function copyBox(id){
   const el = document.getElementById(id);
@@ -2618,8 +2716,14 @@ function openSite(){
   sSilence.value=site.silence.join('\n');
   sBootLines.value=(site.bootLines||SEED.site.bootLines).join('\n');
   sScanTitle.value = site.scanTitle || '';
-  sScans.value = (site.scans||[]).map(x=>
-    [x.cap||'', x.img||'-', x.text||''].join('\n')).join('\n\n');
+  sScans.value = (site.scans||[]).map(x=>{
+    const imgs = (x.imgs && x.imgs.length) ? x.imgs : (x.img ? [x.img] : []);
+    return [
+      x.cap ? `[${x.cap}]` : '',
+      imgs.length ? `img: ${imgs.join(', ')}` : '',
+      x.text || ''
+    ].filter(Boolean).join('\n');
+  }).join('\n\n===\n\n');
   const F = site.font || {};
   sFScale.value=F.scale||100; sFHero.value=F.hero||100; sFTitle.value=F.title||100;
   sFEntry.value=F.entry||100; sFLead.value=F.lead||100; sFBody.value=F.body||100;
@@ -2655,15 +2759,20 @@ function saveSite(){
   site.bootLines=sBootLines.value.split('\n').map(x=>x.trimEnd()).filter(x=>x.length);
   if(!site.bootLines.length) site.bootLines=SEED.site.bootLines;
   site.scanTitle = sScanTitle.value.trim();
-  site.scans = sScans.value.split(/\n\s*\n/).map(b=>b.trim()).filter(Boolean).map(b=>{
+  site.scans = sScans.value.split(/\n\s*={3,}\s*\n/).map(b=>b.trim()).filter(Boolean).map(b=>{
     const ln = b.split('\n');
-    const img = (ln[1]||'').trim();
-    return {
-      cap: (ln[0]||'').trim(),
-      img: (img === '-' || img === '') ? '' : img,
-      text: ln.slice(2).join('\n').trim()
-    };
-  });
+    let cap = '', imgs = [], rest = [];
+    ln.forEach((line, i)=>{
+      const t = line.trim();
+      if(!cap && i < 3 && /^\[.+\]$/.test(t)){ cap = t.slice(1,-1).trim(); return; }
+      if(/^img\s*:/i.test(t)){
+        imgs = t.replace(/^img\s*:/i,'').split(',').map(x=>x.trim()).filter(x=>x && x!=='-');
+        return;
+      }
+      rest.push(line);
+    });
+    return { cap, imgs, text: rest.join('\n').replace(/^\n+|\n+$/g,'') };
+  }).filter(x=> x.cap || x.imgs.length || x.text);
   site.font = {
     scale:parseFloat(sFScale.value)||100, hero:parseFloat(sFHero.value)||100,
     title:parseFloat(sFTitle.value)||100, entry:parseFloat(sFEntry.value)||100,
@@ -2919,10 +3028,37 @@ function sonarItems(){
   return ((site.scans && site.scans.length) ? site.scans : []).filter(x => x && (x.img || x.text));
 }
 /* 신호점 배치 — 황금각으로 겹치지 않게 흩뿌림 */
+/* 방위 눈금 — 30도마다, 90도는 굵게 */
+function buildBearing(){
+  const b = document.getElementById('bearing');
+  if(b.dataset.done) return;
+  b.dataset.done = '1';
+  for(let d=0; d<360; d+=15){
+    const t = document.createElement('span');
+    if(d % 90 === 0) t.className = 'major';
+    t.style.transform = `rotate(${d}deg)`;
+    b.appendChild(t);
+  }
+}
 function placeBlips(){
+  buildBearing();
   const scope = document.getElementById('scope');
   scope.querySelectorAll('.blip').forEach(b=>b.remove());
   const list = sonarItems();
+  /* 텔레메트리 */
+  document.getElementById('telNum').textContent = String(list.length).padStart(2,'0');
+  const tp = document.getElementById('telPos');
+  if(tp) tp.textContent = `${(site.sideL||'').replace(/^LAT\s*/,'')} / ${(site.sideR||'').replace(/^LON\s*/,'')}`;
+  /* 접점 목록 */
+  const ul = document.getElementById('contactList');
+  ul.innerHTML = list.map((it,i)=>{
+    const bars = 2 + (i % 3);
+    return `<li><button onclick="showDetail(${i})">
+      <span class="no">${String(i+1).padStart(2,'0')}</span>
+      <span class="nm">${esc(it.cap || ('SIGNAL ' + String(i+1).padStart(2,'0')))}</span>
+      <span class="sg">${[3,6,9,11].slice(0,bars).map(h=>`<i style="height:${h}px"></i>`).join('')}</span>
+    </button></li>`;
+  }).join('') || '<li style="color:var(--static);font-size:var(--t-small);padding:9px 2px;">탐지된 신호 없음</li>';
   list.forEach((it, i)=>{
     const ang = (i * 137.5 - 90) * Math.PI / 180;
     const rad = 0.20 + ((i * 0.27) % 0.62);        /* 0.20 ~ 0.82 */
@@ -2947,12 +3083,14 @@ function showDetail(i){
   sonarIdx = Math.max(0, Math.min(i, list.length - 1));
   const it = list[sonarIdx];
   document.getElementById('detailCap').textContent = it.cap || '';
+  const imgs = (it.imgs && it.imgs.length) ? it.imgs : (it.img ? [it.img] : []);
   const img = document.getElementById('detailImg');
-  img.innerHTML = it.img
-    ? `<img src="${esc(it.img)}" alt=""><span class="mark a"></span><span class="mark d"></span>`
-    : '';
-  img.style.display = it.img ? 'block' : 'none';
-  document.getElementById('detailTxt').innerHTML = nl(it.text || '');
+  img.className = 'detail-img' + (imgs.length > 1 ? ' multi' : '');
+  img.innerHTML = imgs.map(u=>
+    `<span class="shot seen"><img src="${esc(u)}" alt="">
+       <span class="mark a"></span><span class="mark d"></span></span>`).join('');
+  img.style.display = imgs.length ? '' : 'none';
+  document.getElementById('detailTxt').innerHTML = richText(it.text || '');
   document.getElementById('dIdx').textContent = `${sonarIdx+1} / ${list.length}`;
   document.getElementById('dPrev').disabled = (sonarIdx === 0);
   document.getElementById('dNext').disabled = (sonarIdx === list.length - 1);
@@ -2972,11 +3110,25 @@ function openSonar(){
   placeBlips();
   backToScope();
   document.getElementById('sonar').classList.add('on');
+  runBearing();
   const btn = document.getElementById('sonarBtn');
   btn.classList.remove('alert');
   document.getElementById('sonarCount').textContent = sonarItems().length + ' CONTACTS';
 }
-function closeSonar(){ document.getElementById('sonar').classList.remove('on'); }
+function closeSonar(){
+  document.getElementById('sonar').classList.remove('on');
+  clearInterval(closeSonar._t);
+}
+/* 스윕에 맞춰 방위각 표시가 돌아감 */
+function runBearing(){
+  clearInterval(closeSonar._t);
+  let d = 0;
+  closeSonar._t = setInterval(()=>{
+    d = (d + 6) % 360;
+    const el = document.getElementById('telBrg');
+    if(el) el.textContent = String(d).padStart(3,'0');
+  }, 76);
+}
 
 (function initSonar(){
   document.getElementById('sonarBtn').addEventListener('click', openSonar);
