@@ -139,7 +139,9 @@ body.locked{overflow:hidden;height:100vh;}
 #boot.glitch .glitch-veil{animation:veilFlash .5s ease-out;}
 @keyframes veilFlash{0%{opacity:.6;}100%{opacity:0;}}
 /* 간섭 줄 — 색만 다르게 */
-#bootLines div.jam{color:var(--signal);opacity:.92;}
+/* B안 — 잡음에 묻힌 회색 */
+#bootLines div.jam{color:#5c6b7a;opacity:.9;
+  text-shadow:0 0 10px rgba(92,107,122,.25);}
 
 /* ── 마지막 소나 핑 ── */
 /* 마지막 핑 — 조용히 한 번 퍼지는 원 */
