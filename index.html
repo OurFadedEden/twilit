@@ -138,6 +138,14 @@ body.locked{overflow:hidden;height:100vh;}
 @keyframes sunkenBreathe{
   0%,100%{transform:scale(1) translateY(0);opacity:.72;}
   50%{transform:scale(1.06) translateY(-8px);opacity:1;}}
+/* 모바일 — 화면이 좁아 같은 세기도 훨씬 강하게 보임 */
+@media (max-width:700px){
+  .sunken{height:48vh;opacity:calc(var(--p) * var(--p) * var(--p) * .55);}
+  .sunken-rays{height:48vh;opacity:calc(var(--p) * var(--p) * var(--p) * .5);filter:blur(30px);}
+  .sunkline{opacity:calc(var(--p) * var(--p) * .55);}
+  #noise{opacity:.018;}
+  .hum{opacity:.72;}
+}
 /* 바닥 경계선 — 잠긴 수평선 */
 .sunkline{position:fixed;left:0;right:0;bottom:0;height:2px;z-index:2;pointer-events:none;
   opacity:calc(var(--p) * var(--p));
@@ -3146,7 +3154,10 @@ addEventListener('resize', sizeNoise);
 function drawNoise(){
   if(!running) return;
   const d=nctx.createImageData(noise.width,noise.height);
-  for(let i=0;i<d.data.length;i+=4){ const v=Math.random()*255;
+  /* 모바일은 알갱이 대비를 낮춰 부드럽게 */
+  const base = IS_TOUCH ? 90 : 0;
+  const span = IS_TOUCH ? 110 : 255;
+  for(let i=0;i<d.data.length;i+=4){ const v = base + Math.random()*span;
     d.data[i]=d.data[i+1]=d.data[i+2]=v; d.data[i+3]=255; }
   nctx.putImageData(d,0,0);
   scheduleNoise();
