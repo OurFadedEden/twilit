@@ -1112,9 +1112,35 @@ img{ -webkit-user-drag:none;user-drag:none;user-select:none;
 .bearing span.major{background:linear-gradient(180deg, rgba(232,176,75,.5) 0 11px, transparent 11px);}
 .scope{position:relative;width:100%;max-width:420px;aspect-ratio:1;margin:0 auto;
   border-radius:50%;overflow:hidden;
-  background:radial-gradient(circle, rgba(10,26,42,.9) 0%, rgba(4,10,18,.95) 72%);
+  background:
+    /* 미세한 잡음 알갱이 */
+    radial-gradient(circle at 22% 34%, rgba(111,168,196,.09) 0 1px, transparent 1px),
+    radial-gradient(circle at 68% 18%, rgba(111,168,196,.07) 0 1px, transparent 1px),
+    radial-gradient(circle at 44% 72%, rgba(111,168,196,.08) 0 1px, transparent 1px),
+    radial-gradient(circle at 81% 61%, rgba(232,176,75,.06) 0 1px, transparent 1px),
+    radial-gradient(circle at 14% 82%, rgba(111,168,196,.06) 0 1px, transparent 1px),
+    /* 격자 */
+    repeating-conic-gradient(from 0deg, rgba(111,168,196,.035) 0deg 1deg, transparent 1deg 30deg),
+    radial-gradient(circle, rgba(10,26,42,.92) 0%, rgba(4,10,18,.96) 72%);
+  background-size:180px 180px,180px 180px,180px 180px,180px 180px,180px 180px,auto,auto;
   border:1px solid rgba(111,168,196,.3);
-  box-shadow:inset 0 0 50px rgba(111,168,196,.07);}
+  box-shadow:inset 0 0 50px rgba(111,168,196,.07), 0 0 30px rgba(0,0,0,.5);}
+/* 스코프 유리 반사 */
+.scope::after{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:
+    linear-gradient(150deg, rgba(190,225,250,.05) 0 22%, transparent 42%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.14) 0 1px, transparent 1px 3px);}
+/* 스윕 잔광 — 느리게 도는 두 번째 층 */
+.scope .sw2{position:absolute;inset:0;border-radius:50%;pointer-events:none;opacity:.5;
+  background:conic-gradient(from 0deg, rgba(111,168,196,.13) 0deg,
+    transparent 44deg, transparent 360deg);
+  animation:sweep 9.2s linear infinite reverse;}
+/* 중심 표시 */
+.scope .hub{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;
+  border-radius:50%;background:var(--tide);box-shadow:0 0 10px var(--tide);
+  animation:blink 2.4s ease-in-out infinite;}
+.scope .hub::after{content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:1px solid rgba(111,168,196,.4);}
 .scope .rg{position:absolute;border:1px solid rgba(111,168,196,.14);border-radius:50%;}
 .scope .rg.r1{inset:12%;} .scope .rg.r2{inset:26%;} .scope .rg.r3{inset:40%;}
 .scope .cr{position:absolute;background:rgba(111,168,196,.12);}
@@ -1140,6 +1166,14 @@ img{ -webkit-user-drag:none;user-drag:none;user-select:none;
   padding:3px 8px;opacity:0;transition:opacity .3s;pointer-events:none;}
 .blip.left .tag{left:auto;right:26px;}
 .blip:active .pt{transform:scale(1.5);}
+/* 목록에서 가리키면 함께 반응 */
+.blip.hot .pt{transform:scale(1.7);background:#ffe9b0;box-shadow:0 0 18px var(--signal);}
+.blip.hot .tag{opacity:1;}
+/* 신호점에서 중심으로 이어지는 실선 */
+.blip .ray{position:absolute;left:50%;top:50%;height:1px;transform-origin:0 50%;
+  background:linear-gradient(90deg, rgba(232,176,75,.5), transparent);
+  opacity:0;transition:opacity .3s;pointer-events:none;}
+.blip.hot .ray{opacity:1;}
 @media (hover:hover){
   .blip:hover .pt{transform:scale(1.6);}
   .blip:hover .tag{opacity:1;}
@@ -1163,6 +1197,10 @@ img{ -webkit-user-drag:none;user-drag:none;user-select:none;
   flex:0 0 auto;font-variant-numeric:tabular-nums;}
 .contacts .nm{flex:1;min-width:0;font-size:var(--t-small);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.contacts .dp{font-family:var(--mono);font-size:var(--t-micro);color:var(--static);
+  flex:0 0 auto;font-variant-numeric:tabular-nums;}
+.contacts li button.hot{border-color:rgba(232,176,75,.45);background:rgba(232,176,75,.05);}
+.contacts li button.hot .nm{color:var(--signal);}
 .contacts .sg{display:flex;gap:2px;align-items:flex-end;height:9px;flex:0 0 auto;}
 .contacts .sg i{width:2px;background:var(--tide);}
 .contacts li button:active{border-color:rgba(232,176,75,.5);}
@@ -1579,7 +1617,9 @@ body.adm .dock{bottom:64px;}
           <span class="rg r1"></span><span class="rg r2"></span><span class="rg r3"></span>
           <span class="cr h"></span><span class="cr v"></span>
           <span class="echo"></span>
+          <span class="sw2"></span>
           <span class="sw"></span>
+          <span class="hub"></span>
           <span class="rng" style="top:12.5%;">-1000M</span>
           <span class="rng" style="top:26.5%;">-2000M</span>
           <span class="rng" style="top:40.5%;">-3000M</span>
@@ -1598,6 +1638,13 @@ body.adm .dock{bottom:64px;}
     </div>
 
     <div class="detail" id="detail">
+      <div class="detail-meta">
+        <span><span class="rec"></span>DECODED</span>
+        <span>NO <i id="dNo">01</i></span>
+        <span>BRG <i id="dBrg">000</i>°</span>
+        <span class="sp"></span>
+        <button class="detail-share" id="dShare">⧉ LINK</button>
+      </div>
       <div class="detail-cap" id="detailCap"></div>
       <div class="detail-img shot seen" id="detailImg"></div>
       <div class="detail-txt" id="detailTxt"></div>
@@ -2598,6 +2645,14 @@ function observeEntries(){
 function handleHash(){
   const h = location.hash.replace('#','');
   if(h === ADMIN_KEY){ setTimeout(tryAdmin, 300); return; }
+  /* #scan-3 → 관측 기록 3번 열기 */
+  const sc = h.match(/^scan-(\d+)$/);
+  if(sc){
+    if(!gatePassed()) return;
+    enterSite();
+    setTimeout(()=>{ openSonar(); showDetail(parseInt(sc[1]) - 1); }, 700);
+    return;
+  }
   const m = h.match(/^log-(\d+)$/);
   if(m){
     const id = parseInt(m[1]);
@@ -3534,6 +3589,14 @@ addEventListener('scroll', ()=>{ if(running) parallax(); }, {passive:true});
 
 /* ============ 소나 (관측 기록) ============ */
 let sonarIdx = 0, sonarOpened = false;
+const blipBrg = {};
+/* 목록 ↔ 신호점 상호 강조 */
+function markContact(i, on){
+  const b = document.querySelector(`.blip[data-i="${i}"]`);
+  const l = document.querySelector(`.contacts button[data-i="${i}"]`);
+  if(b) b.classList.toggle('hot', on);
+  if(l) l.classList.toggle('hot', on);
+}
 function sonarItems(){
   return ((site.scans && site.scans.length) ? site.scans : []).filter(x => x && (x.img || x.text));
 }
@@ -3563,9 +3626,12 @@ function placeBlips(){
   const ul = document.getElementById('contactList');
   ul.innerHTML = list.map((it,i)=>{
     const bars = 2 + (i % 3);
-    return `<li><button onclick="showDetail(${i})">
+    const nm = (it.cap || '').split('|').pop().trim() || ('SIGNAL ' + String(i+1).padStart(2,'0'));
+    return `<li><button data-i="${i}" onclick="showDetail(${i})"
+        onmouseenter="markContact(${i},true)" onmouseleave="markContact(${i},false)">
       <span class="no">${String(i+1).padStart(2,'0')}</span>
-      <span class="nm">${esc(it.cap || ('SIGNAL ' + String(i+1).padStart(2,'0')))}</span>
+      <span class="nm">${esc(nm)}</span>
+      <span class="dp">${String(blipBrg[i]||0).padStart(3,'0')}°</span>
       <span class="sg">${[3,6,9,11].slice(0,bars).map(h=>`<i style="height:${h}px"></i>`).join('')}</span>
     </button></li>`;
   }).join('') || '<li style="color:var(--static);font-size:var(--t-small);padding:9px 2px;">탐지된 신호 없음</li>';
@@ -3576,13 +3642,24 @@ function placeBlips(){
     const y = 50 + Math.sin(ang) * rad * 44;
     const b = document.createElement('button');
     b.className = 'blip' + (x > 62 ? ' left' : '');
+    b.dataset.i = i;
     b.style.left = x + '%';
     b.style.top  = y + '%';
     b.style.animationDelay = (i * 0.35) + 's';
-    b.innerHTML = `<span class="pt"></span>
-      <span class="tag">${esc(it.cap || ('SIGNAL ' + String(i+1).padStart(2,'0')))}</span>`;
+    /* 중심에서 신호점까지 잇는 실선 */
+    const dx = 50 - x, dy = 50 - y;
+    const len = Math.sqrt(dx*dx + dy*dy);
+    const deg = Math.atan2(dy, dx) * 180 / Math.PI;
+    const short = (it.cap || '').split('|').pop().trim() || ('SIGNAL ' + String(i+1).padStart(2,'0'));
+    b.innerHTML = `<span class="ray" style="width:${len*4.2}px;transform:rotate(${deg}deg);"></span>
+      <span class="pt"></span>
+      <span class="tag">${esc(short.slice(0,26))}</span>`;
     b.addEventListener('click', ()=> showDetail(i));
+    b.addEventListener('mouseenter', ()=> markContact(i, true));
+    b.addEventListener('mouseleave', ()=> markContact(i, false));
     scope.appendChild(b);
+    /* 각 신호의 방위각 기억 */
+    blipBrg[i] = Math.round(((Math.atan2(y-50, x-50) * 180 / Math.PI) + 450) % 360);
   });
   const hint = document.getElementById('scopeHint');
   hint.textContent = list.length ? '신호를 눌러 확인' : '탐지된 신호 없음';
@@ -3601,15 +3678,32 @@ function showDetail(i){
        <span class="mark a"></span><span class="mark d"></span></span>`).join('');
   img.style.display = imgs.length ? '' : 'none';
   document.getElementById('detailTxt').innerHTML = richText(it.text || '');
-  document.getElementById('dIdx').textContent = `${sonarIdx+1} / ${list.length}`;
+  document.getElementById('dNo').textContent = String(sonarIdx+1).padStart(2,'0');
+  document.getElementById('dBrg').textContent = String(blipBrg[sonarIdx]||0).padStart(3,'0');
+  /* 다음 글 제목까지 보여줌 */
+  const nx = list[sonarIdx+1];
+  const nxName = nx ? ((nx.cap||'').split('|').pop().trim()) : '';
+  document.getElementById('dIdx').innerHTML =
+    `${sonarIdx+1} / ${list.length}` +
+    (nxName ? `<b>NEXT · ${esc(nxName.slice(0,22))}</b>` : '');
   document.getElementById('dPrev').disabled = (sonarIdx === 0);
   document.getElementById('dNext').disabled = (sonarIdx === list.length - 1);
+  /* 주소에 남겨 공유 가능하게 */
+  history.replaceState(null,'','#scan-' + (sonarIdx+1));
   document.getElementById('scopeWrap').classList.add('off');
   document.getElementById('detail').classList.add('on');
   document.getElementById('sonarBack').style.display = 'inline-block';
   document.querySelector('.sonar-box').scrollTop = 0;
 }
+/* 이 기록의 주소를 복사 */
+function shareScan(){
+  const url = location.origin + location.pathname + '#scan-' + (sonarIdx+1);
+  navigator.clipboard.writeText(url)
+    .then(()=>toast('이 기록의 링크가 복사되었습니다'))
+    .catch(()=>prompt('아래 주소를 복사하세요:', url));
+}
 function backToScope(){
+  if(/^#scan-/.test(location.hash)) history.replaceState(null,'',location.pathname);
   document.getElementById('detail').classList.remove('on');
   document.getElementById('scopeWrap').classList.remove('off');
   document.getElementById('sonarBack').style.display = 'none';
@@ -3626,6 +3720,7 @@ function openSonar(){
   document.getElementById('sonarCount').textContent = sonarItems().length + ' CONTACTS';
 }
 function closeSonar(){
+  if(/^#scan-/.test(location.hash)) history.replaceState(null,'',location.pathname);
   document.getElementById('sonar').classList.remove('on');
   clearInterval(closeSonar._t);
 }
@@ -3644,6 +3739,7 @@ function runBearing(){
   document.getElementById('sonarBtn').addEventListener('click', openSonar);
   document.getElementById('sonarClose').addEventListener('click', e=>{ e.stopPropagation(); closeSonar(); });
   document.getElementById('sonarBack').addEventListener('click', e=>{ e.stopPropagation(); backToScope(); });
+  document.getElementById('dShare').addEventListener('click', shareScan);
   document.getElementById('dPrev').addEventListener('click', ()=> showDetail(sonarIdx - 1));
   document.getElementById('dNext').addEventListener('click', ()=> showDetail(sonarIdx + 1));
   addEventListener('keydown', e=>{
