@@ -129,8 +129,12 @@ const SEED = {
     "gsNote": "닿을지 모르지만, 여기에 남겨두면 언젠가 수신됩니다.",
     "bgmList": [
       {
-        "title": "",
+        "title": "Abyssal Twilight",
         "url": "https://youtu.be/JzABGLpcLiQ?si=neKQ3pRp92QnlFw6"
+      },
+      {
+        "title": "黄昏の深海",
+        "url": "https://youtu.be/DxBYhSTwL7k?si=EjRoC6XyYHxh08vh"
       }
     ]
   },
@@ -442,5 +446,5 @@ const SEED = {
       ]
     }
   ],
-  "_v": 1788410986238
+  "_v": 1788412730156
 };
