@@ -1426,6 +1426,7 @@ body.adm .dock{bottom:64px;}
   <button onclick="openChat()">CHAT</button>
   <button class="pub" onclick="publish()">PUBLISH</button>
   <button onclick="importData()">IMPORT</button>
+  <button onclick="resetDraft()">RESET</button>
   <button onclick="logoutAdmin()">EXIT</button>
 </div>
 
@@ -1725,7 +1726,20 @@ const MAX_DEPTH = 3000;
 const IS_TOUCH = matchMedia('(hover:none)').matches;
 const REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const draft = JSON.parse(localStorage.getItem('twilit_draft') || 'null');
+/* 임시본과 파일 중 최신을 고름
+   — 다른 기기에서 발행한 data.js 가 더 새것이면 임시본을 버립니다 */
+const draft = (function(){
+  const d = JSON.parse(localStorage.getItem('twilit_draft') || 'null');
+  if(!d) return null;
+  const fileV  = SEED._v || 0;
+  const draftV = d._v || 0;
+  if(fileV > draftV){
+    localStorage.removeItem('twilit_draft');
+    setTimeout(()=>toast('최신 파일로 갱신되었습니다'), 1200);
+    return null;
+  }
+  return d;
+})();
 let site = Object.assign({}, SEED.site, draft ? draft.site : {});
 let logs = draft ? draft.logs : JSON.parse(JSON.stringify(SEED.logs));
 let isAdmin = false, editingId = null, entered = false;
@@ -2825,7 +2839,8 @@ function saveChat(){
     },
     greet:{ morning:cGm.value, noon:cGn.value, dusk:cGd.value, night:cGe.value },
     responses: parseResponses(cRes.value),
-    fallback: cFb.value.split('\n').map(x=>x.trim()).filter(Boolean)
+    fallback: cFb.value.split('\n').map(x=>x.trim()).filter(Boolean),
+    _v: Date.now()
   };
   localStorage.setItem('twilit_chat', JSON.stringify(chatData));
   closeChat();
@@ -2836,7 +2851,9 @@ function saveChat(){
 function publishChat(){
   const q = x => JSON.stringify(x==null?'':String(x));
   const c = chatData.config||{}, g = chatData.greet||{};
+  const stamp = chatData._v || Date.now();
   let out = `/* 교신 위젯 대사 파일 — 저장소의 chat.js 를 이 파일로 덮어쓰고 커밋하세요. */\n\n`;
+  out += `const CHAT_V = ${stamp};   /* 발행 시각 — 다른 기기 동기화용 */\n\n`;
   out += `const CHAT_CONFIG = {\n`;
   out += `  on: ${c.on?'true':'false'},\n`;
   out += `  name: ${q(c.name)},\n  code: ${q(c.code)},\n  status: ${q(c.status)},\n`;
@@ -2862,11 +2879,24 @@ function publishChat(){
   URL.revokeObjectURL(a.href);
 }
 
+/* 이 기기의 임시 편집분을 버리고 파일 내용으로 되돌림 */
+function resetDraft(){
+  if(!confirm("이 기기에 저장된 편집 내용을 버리고\ndata.js · chat.js 파일 내용으로 되돌릴까요?\n\n발행하지 않은 작업은 사라집니다.")) return;
+  localStorage.removeItem('twilit_draft');
+  localStorage.removeItem('twilit_chat');
+  location.reload();
+}
+
 /* ============ 저장 · 발행 ============ */
-function saveDraft(){ localStorage.setItem('twilit_draft', JSON.stringify({site, logs})); }
+function saveDraft(){
+  localStorage.setItem('twilit_draft', JSON.stringify({site, logs, _v: Date.now()}));
+}
 function publish(){
   const header = "/* 내용 파일 — 저장소의 data.js 를 이 파일로 덮어쓰고 커밋하세요. */\n";
-  const code = header + 'const SEED = ' + JSON.stringify({site, logs}, null, 2) + ';\n';
+  const stamp = Date.now();
+  /* 임시본도 같은 시각으로 맞춰서, 발행한 기기에서 다시 지워지지 않게 */
+  localStorage.setItem('twilit_draft', JSON.stringify({site, logs, _v: stamp}));
+  const code = header + 'const SEED = ' + JSON.stringify({site, logs, _v: stamp}, null, 2) + ';\n';
   const blob = new Blob([code], {type:'text/javascript'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -3156,7 +3186,14 @@ function runBearing(){
 /* 편집분이 있으면 그것을, 없으면 chat.js 원본을 사용 */
 let chatData = (function(){
   const d = JSON.parse(localStorage.getItem('twilit_chat') || 'null');
-  if(d) return d;
+  /* chat.js 가 더 최신이면 이 기기의 임시본을 버림 */
+  const fileV = (typeof CHAT_V !== 'undefined') ? CHAT_V : 0;
+  if(d){
+    if(fileV > (d._v || 0)){
+      localStorage.removeItem('twilit_chat');
+      setTimeout(()=>toast('교신 대사가 최신 파일로 갱신되었습니다'), 1600);
+    } else return d;
+  }
   return {
     config:    (typeof CHAT_CONFIG !== 'undefined') ? Object.assign({}, CHAT_CONFIG) : {on:false},
     greet:     (typeof GREET !== 'undefined') ? Object.assign({}, GREET) : {},
