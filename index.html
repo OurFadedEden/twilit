@@ -131,6 +131,27 @@ body.locked{overflow:hidden;height:100vh;}
   transition:all .8s cubic-bezier(.4,0,.2,1);}
 /* 기포 캔버스 */
 #bootBubbles{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+/* 수면 — 위에서 내려오는 황혼 빛 */
+.surface{position:absolute;left:0;right:0;top:0;height:46vh;pointer-events:none;z-index:1;
+  background:
+    radial-gradient(ellipse 65% 100% at 50% -18%, rgba(232,176,75,.22), transparent 62%),
+    radial-gradient(ellipse 120% 90% at 50% -30%, rgba(255,205,130,.09), transparent 70%),
+    linear-gradient(180deg, rgba(232,176,75,.1), transparent 72%);
+  animation:surfaceBreathe 7s ease-in-out infinite;}
+@keyframes surfaceBreathe{0%,100%{opacity:.75;}50%{opacity:1;}}
+/* 물결에 부서진 빛줄기 */
+.rays{position:absolute;left:0;right:0;top:0;height:52vh;pointer-events:none;z-index:1;
+  overflow:hidden;opacity:.5;}
+.rays span{position:absolute;top:-14%;width:2px;height:80%;transform-origin:50% 0;
+  background:linear-gradient(180deg, rgba(255,214,140,.5), rgba(232,176,75,.14) 42%, transparent);
+  filter:blur(3px);animation:raySway 9s ease-in-out infinite;}
+@keyframes raySway{
+  0%,100%{transform:rotate(-4deg) scaleY(1);opacity:.42;}
+  50%{transform:rotate(4deg) scaleY(1.12);opacity:.85;}}
+/* 수면 경계선 */
+.waterline{position:absolute;left:0;right:0;top:0;height:2px;pointer-events:none;z-index:1;
+  background:linear-gradient(90deg, transparent, rgba(232,176,75,.5), rgba(255,214,140,.65), rgba(232,176,75,.5), transparent);
+  filter:blur(1px);animation:surfaceBreathe 7s ease-in-out infinite;}
 /* 화면 프레임 */
 .boot-frame{position:absolute;inset:0;pointer-events:none;z-index:1;}
 .boot-frame b{position:absolute;width:18px;height:18px;border:1px solid rgba(111,168,196,.3);}
@@ -1345,6 +1366,9 @@ body.adm .dock{bottom:64px;}
 <body class="locked">
 
 <div id="boot">
+  <span class="waterline"></span>
+  <div class="surface"></div>
+  <div class="rays" id="bootRays"></div>
   <canvas id="bootBubbles"></canvas>
   <span class="boot-ping"></span><span class="boot-ping b"></span><span class="boot-ping c"></span>
   <div class="boot-frame">
@@ -2256,6 +2280,22 @@ function parseBoot(){
   });
 }
 const bootScript = parseBoot();
+/* ── 수면 빛줄기 ── */
+(function bootRays(){
+  const box = document.getElementById('bootRays');
+  if(!box || REDUCE) return;
+  for(let i=0;i<9;i++){
+    const r = document.createElement('span');
+    r.style.left = (4 + Math.random()*92) + '%';
+    r.style.width = (1 + Math.random()*4).toFixed(1) + 'px';
+    r.style.height = (55 + Math.random()*45) + '%';
+    r.style.animationDelay = (-Math.random()*9).toFixed(2) + 's';
+    r.style.animationDuration = (7 + Math.random()*6).toFixed(1) + 's';
+    r.style.opacity = (.3 + Math.random()*0.5).toFixed(2);
+    box.appendChild(r);
+  }
+})();
+
 /* ── 부팅 기포 ── */
 let bootRun = true, bubbles = [], bubBurst = 0;
 (function bootBubbles(){
@@ -2273,8 +2313,8 @@ let bootRun = true, bubbles = [], bubBurst = 0;
     im.onload = ()=>{
       pool.push(im);
       /* 불러오는 즉시 화면 곳곳에 띄움 — 부팅이 짧아도 보이도록 */
-      for(let k=0;k<2;k++){
-        const r = 34 + Math.random()*46;
+      for(let k=0;k<1;k++){
+        const r = 30 + Math.random()*34;
         bubbles.push({
           x: Math.random()*c.width,
           y: Math.random()*c.height*1.1,
@@ -2282,7 +2322,7 @@ let bootRun = true, bubbles = [], bubBurst = 0;
           vy: -(0.32 + Math.random()*0.4),
           drift:(Math.random()-.5)*0.18,
           ph:Math.random()*Math.PI*2,
-          a:.42 + Math.random()*0.22,
+          a:.09 + Math.random()*0.07,
           img: im,
           spin:(Math.random()-.5)*0.0015,
           ang: Math.random()*0.4-0.2
@@ -2293,8 +2333,8 @@ let bootRun = true, bubbles = [], bubBurst = 0;
 
   function spawn(rush){
     /* 가끔 사진 기포 */
-    const useImg = pool.length && Math.random() < 0.22;
-    const r = useImg ? (34 + Math.random()*46) : (1.5 + Math.random()*7);
+    const useImg = pool.length && Math.random() < 0.12;
+    const r = useImg ? (30 + Math.random()*34) : (1.5 + Math.random()*7);
     bubbles.push({
       x: Math.random()*c.width,
       y: c.height + r + (rush ? Math.random()*c.height*0.7 : 0),
@@ -2302,7 +2342,7 @@ let bootRun = true, bubbles = [], bubBurst = 0;
       vy: -(0.25 + Math.random()*0.75) * (useImg ? 0.52 : (r/4 + .6)) * (rush ? 2.6 : 1),
       drift: (Math.random()-.5)*(useImg ? 0.18 : 0.5),
       ph: Math.random()*Math.PI*2,
-      a: useImg ? (.42 + Math.random()*0.22) : (.12 + Math.random()*0.3),
+      a: useImg ? (.09 + Math.random()*0.07) : (.12 + Math.random()*0.3),
       img: useImg ? pool[(Math.random()*pool.length)|0] : null,
       spin: (Math.random()-.5)*0.0015
     });
@@ -2325,7 +2365,9 @@ let bootRun = true, bubbles = [], bubBurst = 0;
         /* 화면 끝에서 서서히 나타나고 사라짐 */
         const fadeIn  = Math.min(1, (c.height + b.r - b.y) / (c.height*0.14));
         const fadeOut = Math.min(1, (b.y + b.r*2) / (c.height*0.22));
-        const al = b.a * Math.max(0, Math.min(fadeIn, fadeOut));
+        /* 수면에 가까울수록 빛에 씻겨 사라짐 */
+        const surf = Math.min(1, Math.max(0, (b.y - c.height*0.12) / (c.height*0.3)));
+        const al = b.a * Math.max(0, Math.min(fadeIn, fadeOut)) * (0.25 + surf*0.75);
         if(al > 0.004){
           x.save();
           x.globalAlpha = al;
@@ -2333,22 +2375,19 @@ let bootRun = true, bubbles = [], bubBurst = 0;
           x.rotate(b.ang);
           x.beginPath(); x.arc(0,0,b.r,0,Math.PI*2); x.clip();
           const canFilter = ('filter' in x);
-          if(canFilter) x.filter = 'blur(2px) saturate(.72) brightness(.9)';
+          if(canFilter) x.filter = 'blur(7px) saturate(.32) brightness(.5)';
           const w = b.r*2, ratio = b.img.naturalHeight ? b.img.naturalWidth/b.img.naturalHeight : 1;
           const dw = ratio >= 1 ? w*ratio : w;
           const dh = ratio >= 1 ? w : w/ratio;
           x.drawImage(b.img, -dw/2, -dh/2, dw, dh);
           if(canFilter) x.filter = 'none';
           /* 물방울 막 느낌 */
-          const gg = x.createRadialGradient(-b.r*.3,-b.r*.3,0, 0,0,b.r);
-          gg.addColorStop(0,'rgba(190,225,250,.2)');
-          gg.addColorStop(.62,'rgba(111,168,196,.05)');
-          gg.addColorStop(1,'rgba(4,10,18,.42)');
+          const gg = x.createRadialGradient(0,0,b.r*0.35, 0,0,b.r);
+          gg.addColorStop(0,'rgba(4,10,18,0)');
+          gg.addColorStop(.75,'rgba(4,10,18,.55)');
+          gg.addColorStop(1,'rgba(4,10,18,1)');
           x.fillStyle = gg; x.fillRect(-b.r,-b.r,b.r*2,b.r*2);
           x.restore();
-          x.beginPath(); x.arc(b.x,b.y,b.r,0,Math.PI*2);
-          x.strokeStyle = `rgba(111,168,196,${al*1.5})`;
-          x.lineWidth = 1; x.stroke();
         }
         return true;
       }
