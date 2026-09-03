@@ -17,7 +17,7 @@ const SEED = {
       "#수신 가능한 현재 프로토콜로 수정합니다#",
       "ARCHIVE CH.25.03.05 — Love"
     ],
-    "bgmUrl": "https://youtu.be/JzABGLpcLiQ?si=neKQ3pRp92QnlFw6",
+    "bgmUrl": "https://youtu.be/v2JNNLQ-ny4?si=GJNGVTc-WVxaoQgS",
     "bgmVol": 35,
     "bgmAuto": 0,
     "callsign": "CH. 25.03.05 — Brother, hood",
@@ -155,7 +155,7 @@ const SEED = {
     "bgmList": [
       {
         "title": "Abyssal Twilight",
-        "url": "https://youtu.be/JzABGLpcLiQ?si=neKQ3pRp92QnlFw6"
+        "url": "https://youtu.be/v2JNNLQ-ny4?si=GJNGVTc-WVxaoQgS"
       },
       {
         "title": "黄昏の深海",
@@ -471,5 +471,5 @@ const SEED = {
       ]
     }
   ],
-  "_v": 1788425310767
+  "_v": 1788431118232
 };
