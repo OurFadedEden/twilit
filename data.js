@@ -413,10 +413,10 @@ const SEED = {
           "note": "DOVSI"
         },
         {
-          "name": "SWEET PARADISE",
-          "url": "https://sweet-paradise.luv3r.me/",
-          "banner": "images/에멜배너.jpeg",
-          "note": "EMEL"
+          "name": "고요를 품은 새벽빛",
+          "url": "https://afterstillness.luv3r.me/",
+          "banner": "images/유성님배너.png",
+          "note": "常綠"
         },
         {
           "name": "The Eternal Moment",
@@ -471,5 +471,5 @@ const SEED = {
       ]
     }
   ],
-  "_v": 1788855250795
+  "_v": 1788877037303
 };
