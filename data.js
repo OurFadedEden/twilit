@@ -437,12 +437,6 @@ const SEED = {
           "note": "JIHA•JAENAN"
         },
         {
-          "name": "FALL INTO YOU_EYE OF THE STORM",
-          "url": "https://seojaehun_hantaehwi.luv3r.me/",
-          "banner": "images/햇살배너.jpeg",
-          "note": "JGTG"
-        },
-        {
           "name": "Everlasting Story",
           "url": "https://ethan.naru.pub/",
           "banner": "images/에버배너.jpeg",
@@ -471,5 +465,5 @@ const SEED = {
       ]
     }
   ],
-  "_v": 1789131120548
+  "_v": 1789131207643
 };
