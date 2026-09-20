@@ -161,7 +161,8 @@ const SEED = {
         "title": "黄昏の深海",
         "url": "https://youtu.be/DxBYhSTwL7k?si=EjRoC6XyYHxh08vh"
       }
-    ]
+    ],
+    "linkShare": 1
   },
   "logs": [
     {

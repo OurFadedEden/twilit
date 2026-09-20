@@ -574,7 +574,33 @@ body.locked{overflow:hidden;height:100vh;}
   background:var(--hue);transition:width .45s;}
 .entry-title:active{color:var(--hue);}
 .entry-preview{margin-top:var(--s2);font-size:var(--t-body);color:var(--ink);max-width:50ch;}
+/* 링크로 도착했을 때 */
+.entry.arrived{animation:arrive 2.6s ease-out;}
+@keyframes arrive{
+  0%{border-left-color:var(--hue);box-shadow:-3px 0 18px -6px var(--hue);}
+  70%{border-left-color:var(--hue);box-shadow:-3px 0 14px -8px var(--hue);}
+  100%{box-shadow:none;}}
 .entry-actions{margin-top:var(--s3);display:flex;gap:var(--s3);flex-wrap:wrap;align-items:center;}
+/* 블록 링크 복사 — 테두리 없이 조용하게 */
+.entry-share{position:relative;background:none;border:none;color:var(--static);
+  font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-tight);
+  padding:2px 0;cursor:pointer;transition:color .3s;
+  display:inline-flex;align-items:center;gap:6px;}
+.entry-share .lk{display:inline-flex;align-items:center;}
+.entry-share .lk i{display:block;width:8px;height:5px;border:1px solid currentColor;border-radius:3px;}
+.entry-share .lk i:first-child{border-right-color:transparent;}
+.entry-share .lk i:last-child{border-left-color:transparent;margin-left:-2px;}
+.entry-share::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;
+  background:var(--hue);transform:scaleX(0);transform-origin:right;
+  transition:transform .35s cubic-bezier(.16,1,.3,1);}
+.entry-share:active,.entry-share.done{color:var(--hue);}
+.entry-share.done::after{transform:scaleX(1);transform-origin:left;}
+@media (hover:hover){
+  .entry-share:hover{color:var(--hue);}
+  .entry-share:hover::after{transform:scaleX(1);transform-origin:left;}
+}
+/* 바로 보이는 블록에서는 오른쪽 끝에 */
+.inline-share{margin-top:var(--s2);display:flex;justify-content:flex-end;}
 .entry-open{font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-tight);
   color:var(--static);background:none;border:none;cursor:pointer;padding:0;transition:color .3s;}
 .entry-open:active{color:var(--hue);}
@@ -2022,6 +2048,13 @@ body.adm .dock{bottom:64px;}
     <label>자료</label>
     <textarea id="sScans" rows="14" placeholder="[SPECIMEN 01]&#10;img: images/a.jpg, images/b.jpg&#10;&#10;*그날은 비가 왔다.*&#10;&#10;&quot;아직 거기 있어?&quot;&#10;&#10;대답은 없었다.&#10;&#10;===&#10;&#10;[SPECIMEN 02]&#10;사진 없이 글만 넣어도 됩니다."></textarea>
 
+    <h4>블록 링크</h4>
+    <p class="hint">각 블록 아래에 링크 복사 버튼을 보여줍니다.<br>
+      누르면 <code>내도메인/#log-3</code> 같은 주소가 복사되고,<br>
+      그 주소로 들어오면 해당 블록이 바로 열립니다.</p>
+    <label>링크 복사 버튼 (1 = 켬 / 0 = 끔)</label>
+    <input id="sLinkShare" type="number" min="0" max="1">
+
     <h4>글자 크기</h4>
     <p class="hint">기본값이 100입니다. 숫자를 올리면 커지고 내리면 작아집니다.<br>
       전체 배율만 바꿔도 되고, 개별 항목만 손봐도 됩니다.</p>
@@ -2668,9 +2701,11 @@ function render(){
       <div class="entry-title" data-text="${esc(l.title)}"${(INLINE.has(l.type) && !l.lock) ? ' style="cursor:default;"' : ` onclick="openSheet(${l.id})"`}>${esc(l.title)}</div>
       <p class="entry-preview">${degrade(l.preview||'', p)}</p>
       ${(INLINE.has(l.type) && !l.lock)
-        ? `<div class="inline-wrap">${l.lead?`<p class="entry-preview" style="color:var(--static);margin-bottom:var(--s3);">${nl(l.lead)}</p>`:''}${inlineBody(l)}</div>`
+        ? `<div class="inline-wrap">${l.lead?`<p class="entry-preview" style="color:var(--static);margin-bottom:var(--s3);">${nl(l.lead)}</p>`:''}${inlineBody(l)}</div>
+           ${shareBtn(l.id, true)}`
         : `<div class="entry-actions">
              <button class="entry-open" onclick="openSheet(${l.id})">▸ 전문 수신</button>
+             ${shareBtn(l.id, false)}
            </div>`}`;
     c.appendChild(el);
 
@@ -2716,6 +2751,39 @@ function observeEntries(){
   document.querySelectorAll('.entry').forEach(el=>observer.observe(el));
 }
 
+/* 링크로 도착한 블록을 잠깐 표시 */
+function flashEntry(el){
+  el.classList.remove('arrived'); void el.offsetWidth; el.classList.add('arrived');
+  setTimeout(()=>el.classList.remove('arrived'), 2600);
+}
+
+/* ============ 블록 링크 복사 ============ */
+/* SITE 설정에서 끌 수 있음 */
+function linkShareOn(){ return String(site.linkShare) !== '0'; }
+function shareBtn(id, inline){
+  if(!linkShareOn()) return '';
+  const btn = `<button class="entry-share" id="sh-${id}" onclick="shareLog(${id})">
+      <span class="lk"><i></i><i></i></span><span>LINK</span>
+    </button>`;
+  return inline ? `<div class="inline-share">${btn}</div>` : btn;
+}
+function shareLog(id){
+  const url = location.origin + location.pathname + '#log-' + id;
+  const btn = document.getElementById('sh-' + id);
+  const done = ()=>{
+    if(!btn) return;
+    btn.classList.add('done');
+    btn.querySelector('span:last-child').textContent = 'COPIED';
+    clearTimeout(btn._t);
+    btn._t = setTimeout(()=>{
+      btn.classList.remove('done');
+      btn.querySelector('span:last-child').textContent = 'LINK';
+    }, 2000);
+  };
+  navigator.clipboard.writeText(url).then(done)
+    .catch(()=>prompt('아래 주소를 복사하세요:', url));
+}
+
 /* ============ 직링크 ============ */
 function handleHash(){
   const h = location.hash.replace('#','');
@@ -2734,9 +2802,16 @@ function handleHash(){
     if(logs.some(l=>l.id===id)){
       if(!gatePassed()){ return; }
       enterSite();
+      const tg = logs.find(l=>l.id===id);
+      const inlineOnly = tg && INLINE.has(tg.type) && !tg.lock;
       setTimeout(()=>{
         jumpTo(id);
-        setTimeout(()=>openSheet(id), 700);
+        /* 바로 보이는 블록은 그 자리로 이동만, 나머지는 전문을 펼침 */
+        if(!inlineOnly) setTimeout(()=>openSheet(id), 700);
+        else {
+          const el = document.getElementById('log-'+id);
+          if(el){ el.classList.add('locked-in'); flashEntry(el); }
+        }
       }, 500);
     }
   }
@@ -3337,6 +3412,7 @@ function openSite(){
   sTerminus.value=site.terminus; sEndMark.value=site.endMark;
   sSilence.value=site.silence.join('\n');
   sBootLines.value=(site.bootLines||SEED.site.bootLines).join('\n');
+  sLinkShare.value = (String(site.linkShare) === '0') ? 0 : 1;
   sScanTitle.value = site.scanTitle || '';
   sScans.value = (site.scans||[]).map(x=>{
     const imgs = (x.imgs && x.imgs.length) ? x.imgs : (x.img ? [x.img] : []);
@@ -3385,6 +3461,7 @@ function saveSite(){
   site.silence=sSilence.value.split('\n').map(s=>s.trim()).filter(Boolean);
   site.bootLines=sBootLines.value.split('\n').map(x=>x.trimEnd()).filter(x=>x.length);
   if(!site.bootLines.length) site.bootLines=SEED.site.bootLines;
+  site.linkShare = (parseInt(sLinkShare.value) === 0) ? 0 : 1;
   site.scanTitle = sScanTitle.value.trim();
   site.scans = sScans.value.split(/\n\s*={3,}\s*\n/).map(b=>b.trim()).filter(Boolean).map(b=>{
     const ln = b.split('\n');
