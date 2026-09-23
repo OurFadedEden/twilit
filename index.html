@@ -3913,14 +3913,14 @@ function importData(){
     box.appendChild(m);
     setTimeout(()=>m.remove(), d*1000 + 100);
   }
-  (function loop(){
+  setTimeout(function loop(){
     const gate = document.getElementById('gate');
     if(gate && gate.classList.contains('entered')) return;
-    /* 가끔 여러 개가 한꺼번에 쏟아짐 */
-    const burst = Math.random() < .22 ? 2 + (Math.random()*3|0) : 1;
-    for(let k=0;k<burst;k++) setTimeout(one, k*160);
-    setTimeout(loop, 420 + Math.random()*1300);
-  })();
+    /* 간간이 하나씩, 아주 드물게 둘 */
+    const burst = Math.random() < .08 ? 2 : 1;
+    for(let k=0;k<burst;k++) setTimeout(one, k*380);
+    setTimeout(loop, 2600 + Math.random()*4400);
+  }, 3200);
 })();
 
 /* ============ 대문 물방울 ============ */
