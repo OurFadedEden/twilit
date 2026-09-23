@@ -659,24 +659,27 @@ body.locked{overflow:hidden;height:100vh;}
   opacity:0;pointer-events:none;transition:.3s;border:1px solid var(--line);}
 @media (min-width:1080px){ .rail{display:block;} }
 
-/* ===== 인트로 — 수면을 사이에 둔 두 사람 ===== */
+/* ===== 인트로 — 수면을 사이에 둔 두 사람 (배너형) ===== */
 .intro{position:relative;z-index:5;}
-.reveal{opacity:0;transform:translateY(16px);transition:opacity 1.1s ease, transform 1.1s ease;}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity 1.1s ease, transform 1.1s ease;}
 .reveal.on{opacity:1;transform:none;}
 
-.scene{position:relative;min-height:max(100vh,680px);overflow:hidden;}
-/* 수면 위 — 옅은 노을 */
-.sc-sky{position:absolute;left:0;right:0;top:0;height:50%;pointer-events:none;
-  background:linear-gradient(180deg, transparent 0%, rgba(60,44,50,.18) 55%, rgba(150,96,52,.22) 100%);}
-/* 수면 아래 — 푸른 물빛 */
-.sc-sea{position:absolute;left:0;right:0;top:50%;bottom:0;pointer-events:none;
-  background:linear-gradient(180deg, rgba(40,82,110,.32) 0%, rgba(12,30,48,.24) 45%, transparent 100%);}
-/* 수면선과 반짝임 */
-.sc-line{position:absolute;left:6%;right:6%;top:50%;height:1px;pointer-events:none;
+.scene{position:relative;}
+.sc-inner{max-width:680px;margin:0 auto;padding:0 24px;
+  display:flex;flex-direction:column;align-items:center;}
+/* 수면 위 — 아래로 갈수록 노을빛 */
+.sky-half{position:relative;padding:104px 0 calc(var(--t-title) * 1.05 + 18px);
+  background:linear-gradient(180deg, transparent 0%, rgba(60,44,50,.14) 45%, rgba(150,96,52,.24) 100%);}
+/* 수면 아래 — 위에서부터 푸른 물빛 */
+.sea-half{position:relative;padding:calc(var(--t-title) * 1.05 + 18px) 0 64px;
+  background:linear-gradient(180deg, rgba(40,82,110,.34) 0%, rgba(12,30,48,.22) 50%, transparent 100%);}
+/* 수면 — 두 절반의 경계 */
+.shore{position:relative;height:0;z-index:3;}
+.sc-line{position:absolute;left:6%;right:6%;top:0;height:1px;pointer-events:none;
   background:linear-gradient(90deg, transparent, rgba(255,214,150,.55) 25%,
     rgba(255,232,190,.9) 50%, rgba(255,214,150,.55) 75%, transparent);
   box-shadow:0 0 16px 2px rgba(232,176,75,.3);}
-.sc-glint{position:absolute;left:0;right:0;top:50%;height:50px;pointer-events:none;
+.sc-glint{position:absolute;left:0;right:0;top:0;height:50px;pointer-events:none;
   background:
     radial-gradient(ellipse 12% 2px at 28% 8px, rgba(255,226,170,.55), transparent 70%),
     radial-gradient(ellipse 16% 2px at 54% 15px, rgba(255,236,200,.65), transparent 70%),
@@ -684,60 +687,72 @@ body.locked{overflow:hidden;height:100vh;}
     radial-gradient(ellipse 7% 1.5px at 40% 30px, rgba(255,226,170,.28), transparent 70%);
   filter:blur(.5px);animation:glintMove 6s ease-in-out infinite alternate;}
 
-/* 위·아래 절반 */
-.sc-top,.sc-bot{position:absolute;left:0;right:0;display:flex;flex-direction:column;
-  align-items:center;padding:0 24px;}
-.sc-top{top:0;bottom:50%;justify-content:flex-end;padding-bottom:calc(var(--t-title) * 1.1 + 14px);gap:20px;}
-.sc-bot{top:50%;bottom:0;justify-content:flex-start;padding-top:calc(var(--t-title) * 1.1 + 14px);gap:20px;}
-
-.callsign{position:absolute;top:84px;left:0;right:0;justify-content:center;z-index:2;
-  display:flex;align-items:center;gap:12px;
+.callsign{display:flex;align-items:center;gap:12px;margin-bottom:22px;
   font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-mid);
   color:rgba(143,186,208,.6);text-indent:var(--ls-mid);}
 .callsign::before,.callsign::after{content:'';width:34px;height:1px;background:rgba(111,168,196,.35);}
 
-/* 두 사람 — 형은 왼쪽 위, 동생은 오른쪽 아래 */
-.person{width:min(560px,100%);display:flex;align-items:center;gap:20px;}
-.person.a{justify-content:flex-start;}
-.person.b{justify-content:flex-end;}
-.pp{position:relative;flex:0 0 auto;width:min(140px,28vw);aspect-ratio:4/5;overflow:hidden;
-  -webkit-mask:radial-gradient(ellipse 72% 72% at 50% 50%, #000 52%, transparent 100%);
-  mask:radial-gradient(ellipse 72% 72% at 50% 50%, #000 52%, transparent 100%);}
-.pp img{width:100%;height:100%;object-fit:cover;display:block;}
-.pp .shot{display:block;width:100%;height:100%;}
-.pp .shot::after,.pp .mark{display:none;}
-.pp .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:var(--t-micro);color:var(--static);
-  background:rgba(58,70,84,.2);}
-/* 형 — 황혼빛을 받아 또렷하게 */
-.person.a .pp img{filter:saturate(.9) brightness(.95) sepia(.12);}
-.person.a .pp::after{content:'';position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(180deg, rgba(255,200,130,.16), transparent 50%, rgba(232,150,70,.2));}
-/* 동생 — 물속에서 푸르게 일렁임 */
-.person.b .pp img{filter:saturate(.68) brightness(.82) hue-rotate(-8deg);}
-.person.b .pp::after{content:'';position:absolute;inset:0;pointer-events:none;
+/* ── 인용 — 장면에 녹아드는 속삭임 ── */
+.whisper{max-width:520px;text-align:center;font-family:var(--serif);
+  font-size:var(--t-small);line-height:2.05;letter-spacing:.01em;}
+.whisper em{font-style:normal;}
+/* 하늘 쪽 — 노을빛 */
+.whisper.w-sky{color:rgba(236,208,168,.66);margin-bottom:26px;
+  text-shadow:0 0 14px rgba(232,160,80,.22);}
+/* 물속 쪽 — 푸르고 흐릿하게 */
+.whisper.w-sea{color:rgba(150,196,218,.62);margin-top:26px;
+  text-shadow:0 0 14px rgba(111,168,196,.25);filter:blur(.2px);}
+.whisper::before,.whisper::after{content:'';display:block;width:1px;height:18px;margin:0 auto;
+  background:linear-gradient(180deg, transparent, currentColor, transparent);opacity:.5;}
+.whisper::before{margin-bottom:10px;} .whisper::after{margin-top:10px;}
+
+/* ── 두 사람 — 배너 ── */
+.person{position:relative;width:100%;}
+.banner{position:relative;width:100%;aspect-ratio:16/7;overflow:hidden;
+  -webkit-mask:linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent),
+               linear-gradient(180deg, transparent, #000 16%, #000 84%, transparent);
+  -webkit-mask-composite:source-in;
+  mask:linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent),
+       linear-gradient(180deg, transparent, #000 16%, #000 84%, transparent);
+  mask-composite:intersect;}
+.banner img{width:100%;height:100%;object-fit:cover;object-position:center 26%;display:block;}
+.banner .shot{display:block;width:100%;height:100%;}
+.banner .shot::after,.banner .mark{display:none;}
+.banner .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:var(--t-micro);color:var(--static);background:rgba(58,70,84,.18);}
+/* 형 — 황혼빛 */
+.person.a .banner img{filter:saturate(.88) brightness(.9) sepia(.1);}
+.person.a .banner::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg, rgba(255,200,130,.12), transparent 40%, rgba(40,24,18,.55));}
+/* 동생 — 물속 */
+.person.b .banner img{filter:saturate(.66) brightness(.78) hue-rotate(-8deg);}
+.person.b .banner::after{content:'';position:absolute;inset:0;pointer-events:none;
   background:
-    radial-gradient(ellipse 30% 6% at 30% 22%, rgba(200,235,255,.22), transparent 70%),
-    radial-gradient(ellipse 24% 5% at 66% 46%, rgba(200,235,255,.16), transparent 70%),
-    linear-gradient(180deg, rgba(60,120,160,.3), rgba(10,30,50,.35));}
-@media (hover:hover) and (min-width:900px){ .person.b .pp{filter:url(#poemWarp);} }
-
-.pcap{display:flex;flex-direction:column;gap:3px;}
-.person.a .pcap{text-align:left;}
-.person.b .pcap{text-align:right;}
+    radial-gradient(ellipse 24% 5% at 28% 24%, rgba(200,235,255,.2), transparent 70%),
+    radial-gradient(ellipse 20% 4% at 70% 42%, rgba(200,235,255,.14), transparent 70%),
+    linear-gradient(180deg, rgba(60,120,160,.28), rgba(8,22,38,.55));}
+@media (hover:hover) and (min-width:900px){ .person.b .banner{filter:url(#poemWarp);} }
+/* 배너 위 이름표 */
+.pcap{position:absolute;bottom:14%;z-index:2;display:flex;flex-direction:column;gap:2px;}
+.person.a .pcap{left:12%;text-align:left;}
+.person.b .pcap{right:12%;text-align:right;}
 .pair-label{font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-mid);}
-.person.a .pair-label{color:var(--signal);} .person.b .pair-label{color:var(--tide);}
-.pair-name{font-family:var(--serif);font-size:1.12rem;color:var(--paper);line-height:1.5;}
-.person.b .pair-name{color:#b9dcec;}
-.pair-line{font-size:var(--t-small);color:var(--static);line-height:1.6;}
+.person.a .pair-label{color:#f0c070;} .person.b .pair-label{color:#9ccbe0;}
+.pair-name{font-family:var(--serif);font-size:1.15rem;color:#fff3e4;line-height:1.45;
+  text-shadow:0 1px 10px rgba(0,0,0,.8);}
+.person.b .pair-name{color:#d4ecf7;}
+.pair-line{font-size:var(--t-small);color:rgba(220,220,230,.7);line-height:1.6;
+  text-shadow:0 1px 8px rgba(0,0,0,.8);}
 
-/* 시 — 수면에 걸쳐 */
+/* ── 시 — 수면에 걸쳐 ── */
 .poem-part{font-family:var(--serif);font-weight:400;font-size:var(--t-title);line-height:1.85;
   text-align:center;}
 .poem-part .ln{display:block;}
 .poem-part .ln:empty{height:.6em;}
+.poem-above{margin-top:22px;}
 .poem-above .ln{color:var(--paper);
   text-shadow:-1px 0 0 rgba(232,176,75,.22), 1px 0 0 rgba(111,168,196,.18), 0 0 20px rgba(5,10,18,.9);}
+.poem-below{margin-bottom:22px;}
 .poem-below .ln{color:#9ccbe0;text-shadow:0 0 18px rgba(111,168,196,.35);
   filter:url(#poemWarp) blur(.35px);}
 .poem-below .ln:nth-child(2){opacity:.82;filter:url(#poemWarp) blur(.8px);}
@@ -745,22 +760,15 @@ body.locked{overflow:hidden;height:100vh;}
 .poem-part .amber{color:var(--signal);text-shadow:0 0 22px rgba(232,176,75,.4);}
 .poem-part .blue{color:var(--tide);text-shadow:0 0 22px rgba(111,168,196,.4);}
 .poem-below .amber{color:#e6b877;}
-/* 수면에 걸친 한 줄 — 위는 또렷, 아래는 일렁 */
-.poem-mid{position:absolute;left:0;right:0;top:calc(50% - .925em);z-index:2;
+.poem-mid{position:absolute;left:0;right:0;top:calc(-.925em);z-index:2;
   padding:0 24px;pointer-events:none;line-height:1.85;}
 .poem-mid .wrap{position:relative;}
-.poem-mid .up{clip-path:inset(0 0 50% 0);color:var(--paper);
-  text-shadow:0 0 20px rgba(5,10,18,.9);}
+.poem-mid .up{clip-path:inset(0 0 50% 0);color:var(--paper);text-shadow:0 0 20px rgba(5,10,18,.9);}
 .poem-mid .dn{position:absolute;inset:0;clip-path:inset(50% 0 0 0);color:#9ccbe0;
   filter:url(#poemWarp) blur(.3px);}
 
-/* 장면 아래 */
-.lede{max-width:560px;margin:0 auto;padding:10vh 28px 0;text-align:center;
-  font-family:var(--serif);font-size:var(--t-lead);line-height:2;color:rgba(170,200,220,.72);}
-.lede em{color:var(--paper);font-style:normal;}
-.pair-bond{max-width:520px;margin:7vh auto 0;padding:0 28px;text-align:center;
-  font-family:var(--serif);font-size:var(--t-lead);line-height:2;color:rgba(143,186,208,.66);}
-.intro-tail{max-width:700px;margin:0 auto;padding:0 28px 12vh;}
+.intro-tail{max-width:700px;margin:0 auto;padding:0 28px clamp(48px,10vh,100px);}
+.intro-tail .idx{margin-top:28px;}
 .idx{margin-top:var(--s6);border-top:1px solid var(--line-soft);padding-top:var(--s3);}
 .idx-head{width:100%;background:none;border:none;cursor:pointer;text-align:left;
   font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-mid);color:var(--tide);
@@ -780,19 +788,18 @@ body.locked{overflow:hidden;height:100vh;}
 .idx-list button:active .t{color:var(--signal);}
 
 
+
 @media (max-width:600px){
-  .scene{min-height:max(100vh,720px);}
-  .sc-top{padding-bottom:26px;gap:16px;}
-  .sc-bot{padding-top:26px;gap:16px;}
-  .pp{width:28vw;}
-  .sc-top{padding-bottom:calc(clamp(1.05rem,5vw,1.35rem) * 1.1 + 12px);}
-  .sc-bot{padding-top:calc(clamp(1.05rem,5vw,1.35rem) * 1.1 + 12px);}
-  .person{gap:14px;}
-  .pair-name{font-size:.98rem;}
+  .sky-half{padding-top:92px;padding-bottom:calc(clamp(1.05rem,5vw,1.35rem) * 1.05 + 14px);}
+  .sea-half{padding-top:calc(clamp(1.05rem,5vw,1.35rem) * 1.05 + 14px);padding-bottom:48px;}
+  .sc-inner{padding:0 16px;}
+  .banner{aspect-ratio:16/9;}
+  .pair-name{font-size:1rem;}
   .poem-part,.poem-mid{font-size:clamp(1.05rem,5vw,1.35rem);}
+  .whisper{font-size:.78rem;}
 }
 @media (prefers-reduced-motion:reduce){
-  .poem-below .ln,.poem-mid .dn,.person.b .pp{filter:none;}
+  .poem-below .ln,.poem-mid .dn,.person.b .banner{filter:none;}
 }
 
 /* ===== 로그 ===== */
@@ -857,7 +864,7 @@ body.locked{overflow:hidden;height:100vh;}
 .lost{color:rgba(58,70,84,.7);}
 
 /* 수층 */
-.stratum{position:relative;margin:0 0 14vh;padding:14vh 0 0;}
+.stratum{position:relative;margin:0 0 clamp(56px,14vh,130px);padding:clamp(56px,14vh,130px) 0 0;}
 /* 모바일 — 화면 전체 폭 띠 */
 .stratum-band{position:relative;left:50%;transform:translateX(-50%);
   width:100vw;height:clamp(170px,30vh,250px);overflow:hidden;margin-bottom:var(--s5);}
@@ -922,12 +929,12 @@ body.locked{overflow:hidden;height:100vh;}
 @media (prefers-reduced-motion:reduce){
   .silence .tx,.silence .dm{animation:none;opacity:.85;}
 }
-.interlude{max-width:660px;margin:0 auto;padding:14vh 28px;text-align:center;position:relative;z-index:5;}
+.interlude{max-width:660px;margin:0 auto;padding:clamp(56px,14vh,130px) 28px;text-align:center;position:relative;z-index:5;}
 .interlude p{font-family:var(--serif);font-style:normal;font-weight:400;
   font-size:clamp(1.05rem,2.8vw,1.4rem);line-height:2;color:var(--paper);opacity:.88;}
 .interlude .mark{display:block;font-family:var(--mono);font-size:var(--t-micro);
   letter-spacing:var(--ls-mid);color:var(--static);margin-bottom:var(--s3);font-style:normal;}
-.terminus{max-width:660px;margin:0 auto;padding:10vh 28px 12vh;text-align:center;position:relative;z-index:5;}
+.terminus{max-width:660px;margin:0 auto;padding:clamp(48px,10vh,100px) 28px clamp(56px,12vh,120px);text-align:center;position:relative;z-index:5;}
 .terminus p{font-family:var(--serif);font-style:normal;font-weight:400;
   font-size:var(--t-lead);color:var(--tide);line-height:2;opacity:.9;}
 .terminus .end{font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-mid);
@@ -1934,47 +1941,48 @@ body.adm .dock{bottom:64px;}
 
 <section class="intro" id="intro">
   <div class="scene">
-    <div class="sc-sky"></div>
-    <div class="sc-sea"></div>
-    <span class="sc-line"></span>
-    <span class="sc-glint"></span>
-
     <!-- 수면 위 — 형 -->
-    <div class="callsign reveal" id="callsignOut"></div>
-    <div class="sc-top">
-      <div class="person a reveal">
-        <div class="pp" id="pairAPhoto"></div>
-        <div class="pcap">
-          <div class="pair-label" id="pairALabel"></div>
-          <div class="pair-name" id="pairAName"></div>
-          <div class="pair-line" id="pairALine"></div>
+    <div class="sky-half">
+      <div class="sc-inner">
+        <div class="callsign reveal" id="callsignOut"></div>
+        <div class="whisper w-sky reveal" id="ledeOut"></div>
+        <div class="person a reveal">
+          <div class="banner" id="pairAPhoto"></div>
+          <div class="pcap">
+            <div class="pair-label" id="pairALabel"></div>
+            <div class="pair-name" id="pairAName"></div>
+            <div class="pair-line" id="pairALine"></div>
+          </div>
         </div>
+        <div class="poem-part poem-above reveal" id="poemAbove"></div>
       </div>
-      <div class="poem-part poem-above reveal" id="poemAbove"></div>
     </div>
 
-    <!-- 수면에 걸친 줄 -->
-    <div class="poem-mid poem-part reveal" id="poemMid"></div>
+    <!-- 수면 -->
+    <div class="shore">
+      <span class="sc-line"></span>
+      <span class="sc-glint"></span>
+      <div class="poem-mid poem-part reveal" id="poemMid"></div>
+    </div>
 
     <!-- 수면 아래 — 동생 -->
-    <div class="sc-bot">
-      <div class="poem-part poem-below reveal" id="poemBelow"></div>
-      <div class="person b reveal">
-        <div class="pcap">
-          <div class="pair-label" id="pairBLabel"></div>
-          <div class="pair-name" id="pairBName"></div>
-          <div class="pair-line" id="pairBLine"></div>
+    <div class="sea-half">
+      <div class="sc-inner">
+        <div class="poem-part poem-below reveal" id="poemBelow"></div>
+        <div class="person b reveal">
+          <div class="banner" id="pairBPhoto"></div>
+          <div class="pcap">
+            <div class="pair-label" id="pairBLabel"></div>
+            <div class="pair-name" id="pairBName"></div>
+            <div class="pair-line" id="pairBLine"></div>
+          </div>
         </div>
-        <div class="pp" id="pairBPhoto"></div>
+        <div class="whisper w-sea reveal" id="pairBond"></div>
       </div>
     </div>
   </div>
 
-  <!-- 원문 보관용 (화면에는 위 세 부분으로 나뉘어 나옴) -->
   <h1 id="introTitle" hidden></h1>
-
-  <div class="lede reveal" id="ledeOut"></div>
-  <div class="pair-bond reveal" id="pairBond"></div>
 
   <div class="intro-tail">
     <div class="idx reveal">
@@ -2533,7 +2541,7 @@ function typeGateSub(){
 /* 인트로 순차 등장 */
 function revealIntro(){
   /* 장면은 들어오자마자 순서대로 떠오름 */
-  const order = ['#callsignOut','.person.a','#poemAbove','#poemMid','#poemBelow','.person.b'];
+  const order = ['#callsignOut','#ledeOut','.person.a','#poemAbove','#poemMid','#poemBelow','.person.b','#pairBond'];
   order.forEach((q,i)=>{
     const el = document.querySelector('#intro ' + q);
     if(el) setTimeout(()=>el.classList.add('on'), 300 + i*260);
@@ -2543,7 +2551,7 @@ function revealIntro(){
     es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
   }, {threshold:.2});
   document.querySelectorAll('#intro .reveal').forEach(el=>{
-    if(!el.closest('.scene') && !el.classList.contains('poem-mid')) io.observe(el);
+    if(!el.closest('.scene')) io.observe(el);
   });
 }
 
