@@ -767,6 +767,59 @@ body.locked{overflow:hidden;height:100vh;}
 .poem-mid .dn{position:absolute;inset:0;clip-path:inset(50% 0 0 0);color:#9ccbe0;
   filter:url(#poemWarp) blur(.3px);}
 
+/* ── 타이틀 장면 밀도 ── */
+/* 하늘의 별 */
+.sc-stars{position:absolute;inset:0;pointer-events:none;
+  -webkit-mask:linear-gradient(180deg,#000 0%,#000 55%,transparent 90%);
+  mask:linear-gradient(180deg,#000 0%,#000 55%,transparent 90%);}
+.sc-stars i{position:absolute;width:1.5px;height:1.5px;border-radius:50%;background:#fff3dc;
+  animation:twinkle ease-in-out infinite;}
+.sc-meteors{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+/* 수면 양끝 주석 */
+.shore-note{position:absolute;top:-7px;font-family:var(--mono);font-size:var(--t-micro);
+  letter-spacing:var(--ls-mid);color:rgba(255,214,150,.5);white-space:nowrap;}
+.shore-note.l{left:max(96px,6%);} .shore-note.r{right:max(40px,4%);color:rgba(160,210,235,.5);}
+.shore-note.l::after,.shore-note.r::before{content:'';display:inline-block;width:18px;height:1px;
+  background:currentColor;vertical-align:middle;margin:0 8px;opacity:.6;}
+/* 수면에 번지는 물결 고리 */
+.ripple-ring{position:absolute;left:50%;top:0;width:220px;height:26px;margin-left:-110px;margin-top:-13px;
+  border:1px solid rgba(255,220,170,.4);border-radius:50%;pointer-events:none;opacity:0;
+  animation:ringOut 6s ease-out infinite;}
+.ripple-ring.b{animation-delay:3s;border-color:rgba(160,210,235,.35);}
+@keyframes ringOut{0%{opacity:.7;transform:scale(.3);}100%{opacity:0;transform:scale(2.6);}}
+/* 물속 빛기둥 */
+.sea-shafts{position:absolute;left:0;right:0;top:0;height:70%;pointer-events:none;overflow:hidden;
+  -webkit-mask:linear-gradient(180deg,#000,transparent);mask:linear-gradient(180deg,#000,transparent);}
+.sea-shafts span{position:absolute;top:-4%;height:108%;transform-origin:50% 0;
+  background:linear-gradient(180deg, rgba(255,214,150,.14), rgba(160,210,235,.05) 60%, transparent);
+  filter:blur(14px);animation:shaftSway ease-in-out infinite;}
+/* 물속 방울 */
+.sea-bub{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.sea-bub i{position:absolute;bottom:-10px;border-radius:50%;border:1px solid rgba(170,215,240,.3);
+  background:radial-gradient(circle at 34% 30%, rgba(230,245,255,.45) 0 12%, transparent 32%);
+  animation:gRise linear infinite;}
+/* 배너 테두리 표식과 주석 */
+.person{position:relative;}
+.person .frame-note{position:absolute;top:10%;z-index:2;font-family:var(--mono);font-size:var(--t-micro);
+  letter-spacing:var(--ls-tight);white-space:nowrap;}
+.person.a .frame-note{right:12%;color:rgba(255,220,170,.62);}
+.person.b .frame-note{left:12%;color:rgba(170,215,240,.62);}
+.person .frame-note .rec{display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:#c96a63;box-shadow:0 0 6px #c96a63;margin-right:6px;vertical-align:middle;
+  animation:blink 1.4s ease-in-out infinite;}
+.person .fc{position:absolute;width:12px;height:12px;z-index:2;pointer-events:none;}
+.person.a .fc{border-color:rgba(255,214,150,.45);} .person.b .fc{border-color:rgba(160,210,235,.45);}
+.person .fc.t{top:7%;} .person .fc.b{bottom:7%;}
+.person .fc.l{left:9%;} .person .fc.r{right:9%;}
+.person .fc.t.l{border-top:1px solid;border-left:1px solid;}
+.person .fc.t.r{border-top:1px solid;border-right:1px solid;}
+.person .fc.b.l{border-bottom:1px solid;border-left:1px solid;}
+.person .fc.b.r{border-bottom:1px solid;border-right:1px solid;}
+@media (max-width:600px){
+  .shore-note{display:none;}
+  .person .frame-note{top:8%;}
+}
+
 .intro-tail{max-width:700px;margin:0 auto;padding:0 28px clamp(48px,10vh,100px);}
 .intro-tail .idx{margin-top:28px;}
 .idx{margin-top:var(--s6);border-top:1px solid var(--line-soft);padding-top:var(--s3);}
@@ -888,6 +941,21 @@ body.locked{overflow:hidden;height:100vh;}
 @media (min-width:1200px){
   .stratum-band{aspect-ratio:2/1;}
 }
+/* 블록 뒤 큰 수심 숫자 — 계기판 배경처럼 */
+.entry .wm{position:absolute;right:0;top:-.35em;z-index:-1;pointer-events:none;
+  font-family:var(--serif);font-size:clamp(2.6rem,7vw,4.4rem);line-height:1;
+  color:transparent;-webkit-text-stroke:1px rgba(111,168,196,.1);
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em;user-select:none;
+  transition:-webkit-text-stroke-color 1.2s ease;}
+.entry.locked-in .wm{-webkit-text-stroke-color:color-mix(in srgb, var(--hue) 16%, transparent);}
+/* 수층 제목 위 눈금자 */
+.stratum-text{position:relative;}
+.stratum-text::before{content:'';display:block;height:9px;margin-bottom:12px;
+  background:
+    linear-gradient(90deg, rgba(111,168,196,.35), transparent 70%) 0 100%/100% 1px no-repeat,
+    repeating-linear-gradient(90deg, rgba(111,168,196,.3) 0 1px, transparent 1px 24px) 0 100%/100% 5px no-repeat,
+    repeating-linear-gradient(90deg, rgba(111,168,196,.4) 0 1px, transparent 1px 120px) 0 100%/100% 9px no-repeat;
+  -webkit-mask:linear-gradient(90deg,#000 40%,transparent);mask:linear-gradient(90deg,#000 40%,transparent);}
 .stratum-text{margin-left:var(--s3);}
 @media (min-width:820px){ .stratum-text{margin-left:0;} }
 .stratum-name{font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-mid);
@@ -1943,11 +2011,15 @@ body.adm .dock{bottom:64px;}
   <div class="scene">
     <!-- 수면 위 — 형 -->
     <div class="sky-half">
+      <div class="sc-stars" id="scStars"></div>
+      <div class="sc-meteors" id="scMeteors"></div>
       <div class="sc-inner">
         <div class="callsign reveal" id="callsignOut"></div>
         <div class="whisper w-sky reveal" id="ledeOut"></div>
         <div class="person a reveal">
           <div class="banner" id="pairAPhoto"></div>
+          <i class="fc t l"></i><i class="fc t r"></i><i class="fc b l"></i><i class="fc b r"></i>
+          <div class="frame-note"><span class="rec"></span>REC · 黄昏</div>
           <div class="pcap">
             <div class="pair-label" id="pairALabel"></div>
             <div class="pair-name" id="pairAName"></div>
@@ -1962,15 +2034,22 @@ body.adm .dock{bottom:64px;}
     <div class="shore">
       <span class="sc-line"></span>
       <span class="sc-glint"></span>
+      <span class="ripple-ring"></span><span class="ripple-ring b"></span>
+      <span class="shore-note l">SURFACE ±0M</span>
+      <span class="shore-note r">水面</span>
       <div class="poem-mid poem-part reveal" id="poemMid"></div>
     </div>
 
     <!-- 수면 아래 — 동생 -->
     <div class="sea-half">
+      <div class="sea-shafts" id="seaShafts"></div>
+      <div class="sea-bub" id="seaBub"></div>
       <div class="sc-inner">
         <div class="poem-part poem-below reveal" id="poemBelow"></div>
         <div class="person b reveal">
           <div class="banner" id="pairBPhoto"></div>
+          <i class="fc t l"></i><i class="fc t r"></i><i class="fc b l"></i><i class="fc b r"></i>
+          <div class="frame-note">DEPTH <span id="bDepth">-0012</span>M · 深海</div>
           <div class="pcap">
             <div class="pair-label" id="pairBLabel"></div>
             <div class="pair-name" id="pairBName"></div>
@@ -3018,6 +3097,7 @@ function render(){
     el.style.lineHeight=(2.1-p*.55).toFixed(2);
     el.style.letterSpacing=(-p*.35).toFixed(2)+'px';
     el.innerHTML=`
+      <span class="wm" aria-hidden="true">${esc(String(l.depth||'').replace(/,/g,'').replace(/M$/i,''))}</span>
       <div class="entry-meta">
         <span>${esc(l.time)}</span><span>${esc(l.depth)}</span>
         <span class="type-chip">${TYPE_LABEL[l.type]||'RECORD'}</span>
@@ -4005,6 +4085,81 @@ function importData(){
       if(REDUCE) e.style.animation = 'none';
       sh.appendChild(e);
     }
+  }
+})();
+
+/* ============ 타이틀 장면 채우기 ============ */
+(function titleScene(){
+  /* 별 */
+  const st = document.getElementById('scStars');
+  if(st){
+    for(let i=0;i<(IS_TOUCH?18:30);i++){
+      const e=document.createElement('i');
+      e.style.left=(Math.random()*100).toFixed(1)+'%';
+      e.style.top=(Math.random()*70).toFixed(1)+'%';
+      e.style.animationDuration=(2.5+Math.random()*4).toFixed(1)+'s';
+      e.style.animationDelay=(-Math.random()*6).toFixed(1)+'s';
+      if(REDUCE){ e.style.animation='none'; e.style.opacity=.45; }
+      st.appendChild(e);
+    }
+  }
+  /* 물속 빛기둥 */
+  const sh = document.getElementById('seaShafts');
+  if(sh){
+    const n = IS_TOUCH ? 3 : 5;
+    for(let i=0;i<n;i++){
+      const e=document.createElement('span');
+      const pos = 50 + (i-(n-1)/2)*16 + (Math.random()*6-3);
+      e.style.left=pos.toFixed(1)+'%'; e.style.width=(7+Math.random()*9).toFixed(1)+'%';
+      e.style.marginLeft='-5%';
+      const tilt=(pos-50)*.25;
+      e.style.setProperty('--r0',(tilt-2).toFixed(1)+'deg');
+      e.style.setProperty('--r1',(tilt+2).toFixed(1)+'deg');
+      e.style.animationDuration=(8+Math.random()*6).toFixed(1)+'s';
+      e.style.animationDelay=(-Math.random()*8).toFixed(1)+'s';
+      if(REDUCE) e.style.animation='none';
+      sh.appendChild(e);
+    }
+  }
+  /* 물속 방울 */
+  const bb = document.getElementById('seaBub');
+  if(bb && !REDUCE){
+    for(let i=0;i<(IS_TOUCH?6:10);i++){
+      const e=document.createElement('i');
+      const z=2.5+Math.random()*6;
+      e.style.width=e.style.height=z.toFixed(1)+'px';
+      e.style.left=(Math.random()*100).toFixed(1)+'%';
+      e.style.setProperty('--dx',((Math.random()-.5)*40).toFixed(0)+'px');
+      e.style.setProperty('--h',(30+Math.random()*30).toFixed(0)+'vh');
+      e.style.animationDuration=(8+Math.random()*8).toFixed(1)+'s';
+      e.style.animationDelay=(-Math.random()*14).toFixed(1)+'s';
+      bb.appendChild(e);
+    }
+  }
+  /* 하늘에 가끔 떨어지는 유성 — 대문보다 더 드물게 */
+  const mt = document.getElementById('scMeteors');
+  if(mt && !REDUCE){
+    (function loop(){
+      if(document.getElementById('gate').classList.contains('entered')){
+        const m=document.createElement('span');
+        m.className='meteor';
+        m.style.left=(35+Math.random()*60)+'%';
+        m.style.top=(Math.random()*35)+'%';
+        m.style.width=(60+Math.random()*80).toFixed(0)+'px';
+        m.style.setProperty('--a',(142+Math.random()*12).toFixed(1)+'deg');
+        m.style.setProperty('--dist',(160+Math.random()*220).toFixed(0)+'px');
+        const d=1+Math.random()*.8; m.style.setProperty('--d',d.toFixed(2)+'s');
+        mt.appendChild(m); setTimeout(()=>m.remove(), d*1000+100);
+      }
+      setTimeout(loop, 6000 + Math.random()*8000);
+    })();
+  }
+  /* 동생 배너의 수심 표기가 조금씩 흔들림 */
+  const bd = document.getElementById('bDepth');
+  if(bd && !REDUCE){
+    let v = 12;
+    setInterval(()=>{ v = Math.max(8, Math.min(18, v + (Math.random()<.5?-1:1)));
+      bd.textContent = '-' + String(v).padStart(4,'0'); }, 1400);
   }
 })();
 
