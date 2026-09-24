@@ -109,7 +109,13 @@ body.locked{overflow:hidden;height:100vh;}
 /* 공통 라벨 서체 */
 .lbl{font-family:var(--mono);font-size:var(--t-label);letter-spacing:var(--ls-mid);}
 
-#noise{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.04;pointer-events:none;}
+#noise{position:fixed;left:-25%;top:-25%;width:150%;height:150%;z-index:0;opacity:.04;
+  pointer-events:none;background-repeat:repeat;background-size:180px 180px;
+  will-change:transform;animation:noiseJump .72s steps(1) infinite;}
+@keyframes noiseJump{
+  0%{transform:translate(0,0);} 17%{transform:translate(-5%,3%);}
+  33%{transform:translate(4%,-4%);} 50%{transform:translate(-2%,6%);}
+  67%{transform:translate(6%,1%);} 83%{transform:translate(-4%,-3%);}}
 #motes{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;}
 .hum{position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
@@ -135,9 +141,7 @@ body.locked{overflow:hidden;height:100vh;}
     radial-gradient(ellipse 48% 74% at 63% 126%, rgba(232,176,75,.12), transparent 68%);
   filter:blur(24px);
   animation:sunkenBreathe 12s ease-in-out infinite;}
-@keyframes sunkenBreathe{
-  0%,100%{transform:scale(1) translateY(0);opacity:.72;}
-  50%{transform:scale(1.06) translateY(-8px);opacity:1;}}
+@keyframes sunkenBreathe{0%,100%{opacity:.72;}50%{opacity:1;}}
 /* 모바일 — 화면이 좁아 같은 세기도 훨씬 강하게 보임 */
 @media (max-width:700px){
   .sunken{height:48vh;opacity:calc(var(--p) * var(--p) * var(--p) * .55);}
@@ -192,7 +196,7 @@ body.locked{overflow:hidden;height:100vh;}
     radial-gradient(ellipse 30% 44% at 30% 0%, rgba(255,210,140,.24), transparent 70%),
     radial-gradient(ellipse 34% 48% at 70% 0%, rgba(255,190,120,.16), transparent 72%);
   filter:blur(20px);animation:glowSway 9s ease-in-out infinite alternate;}
-@keyframes glowSway{from{transform:translateX(-4%);}to{transform:translateX(4%);}}
+@keyframes glowSway{from{opacity:.75;}to{opacity:1;}}
 
 /* 오른쪽 수심 눈금 */
 .bt-scale{position:absolute;right:28px;top:14%;bottom:14%;width:26px;pointer-events:none;}
@@ -584,7 +588,7 @@ body.locked{overflow:hidden;height:100vh;}
 .strip{position:fixed;top:0;left:0;right:0;z-index:30;height:70px;
   background:linear-gradient(180deg, rgba(5,10,18,.97), rgba(5,10,18,.7) 66%, transparent);
   border-bottom:1px solid var(--line-soft);display:flex;align-items:center;gap:var(--s2);
-  padding:0 var(--s3);backdrop-filter:blur(6px);}
+  padding:0 var(--s3);}
 #wave{flex:1;height:34px;min-width:0;}
 .strip-meta{font-family:var(--mono);font-size:var(--t-micro);letter-spacing:var(--ls-tight);
   color:var(--static);line-height:1.8;white-space:nowrap;width:126px;flex:0 0 126px;
@@ -791,8 +795,10 @@ body.locked{overflow:hidden;height:100vh;}
 .sea-shafts{position:absolute;left:0;right:0;top:0;height:70%;pointer-events:none;overflow:hidden;
   -webkit-mask:linear-gradient(180deg,#000,transparent);mask:linear-gradient(180deg,#000,transparent);}
 .sea-shafts span{position:absolute;top:-4%;height:108%;transform-origin:50% 0;
+  transform:rotate(var(--r0,0deg));
   background:linear-gradient(180deg, rgba(255,214,150,.14), rgba(160,210,235,.05) 60%, transparent);
-  filter:blur(14px);animation:shaftSway ease-in-out infinite;}
+  filter:blur(14px);animation:shaftFade ease-in-out infinite;}
+@keyframes shaftFade{0%,100%{opacity:.5;}50%{opacity:1;}}
 /* 물속 방울 */
 .sea-bub{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
 .sea-bub i{position:absolute;bottom:-10px;border-radius:50%;border:1px solid rgba(170,215,240,.3);
@@ -941,13 +947,6 @@ body.locked{overflow:hidden;height:100vh;}
 @media (min-width:1200px){
   .stratum-band{aspect-ratio:2/1;}
 }
-/* 블록 뒤 큰 수심 숫자 — 계기판 배경처럼 */
-.entry .wm{position:absolute;right:0;top:-.35em;z-index:-1;pointer-events:none;
-  font-family:var(--serif);font-size:clamp(2.6rem,7vw,4.4rem);line-height:1;
-  color:transparent;-webkit-text-stroke:1px rgba(111,168,196,.1);
-  font-variant-numeric:tabular-nums;letter-spacing:-.01em;user-select:none;
-  transition:-webkit-text-stroke-color 1.2s ease;}
-.entry.locked-in .wm{-webkit-text-stroke-color:color-mix(in srgb, var(--hue) 16%, transparent);}
 /* 수층 제목 위 눈금자 */
 .stratum-text{position:relative;}
 .stratum-text::before{content:'';display:block;height:9px;margin-bottom:12px;
@@ -1869,7 +1868,7 @@ body.adm .dock{bottom:64px;}
   <span class="bt-break"></span>
   <div class="bt-flood"></div>
 </div>
-<canvas id="noise"></canvas>
+<div id="noise"></div>
 <canvas id="motes"></canvas>
 <div class="hum"></div>
 <div class="pressure-veil"></div>
@@ -1889,10 +1888,7 @@ body.adm .dock{bottom:64px;}
     <feDisplacementMap in="SourceGraphic" scale="10"/>
   </filter>
   <filter id="poemWarp" x="-5%" y="-30%" width="110%" height="160%">
-    <feTurbulence type="fractalNoise" baseFrequency="0.008 0.045" numOctaves="1" seed="6">
-      <animate attributeName="baseFrequency" dur="10s"
-        values="0.008 0.045;0.011 0.055;0.008 0.045" repeatCount="indefinite"/>
-    </feTurbulence>
+    <feTurbulence type="fractalNoise" baseFrequency="0.008 0.045" numOctaves="1" seed="6"/>
     <feDisplacementMap in="SourceGraphic" scale="4.5"/>
   </filter>
   <filter id="waterWarpSoft">
@@ -2781,6 +2777,11 @@ function enterSite(){
   entered = true;
   if(site.bgmAuto == 1 && tracks().length) toggleBgm();
   document.getElementById('gate').classList.add('entered');
+  setTimeout(()=>{
+    const g = document.getElementById('gate');
+    if(g) g.style.display = 'none';
+    document.querySelectorAll('#waterWarp animate').forEach(a=>a.remove());
+  }, 2600);
   setTimeout(()=>document.body.classList.remove('locked'), REDUCE ? 0 : 900);
   scrollTo(0,0);
   revealIntro();
@@ -3044,8 +3045,9 @@ let bootRun = true, bubbles = [], bubBurst = 0;
   if(el && m) el.textContent = m[0].replace(/\s+/g,'');
 })();
 function endBoot(){
-  document.getElementById('boot').classList.add('done');
-  setTimeout(()=>{ bootRun = false; }, 1300);
+  const bootEl = document.getElementById('boot');
+  bootEl.classList.add('done');
+  setTimeout(()=>{ bootRun = false; bootEl.style.display = 'none'; }, 1400);
   document.getElementById('gate').classList.add('developed');
   setTimeout(typeGateSub, 1300);
   handleHash();
@@ -3097,7 +3099,6 @@ function render(){
     el.style.lineHeight=(2.1-p*.55).toFixed(2);
     el.style.letterSpacing=(-p*.35).toFixed(2)+'px';
     el.innerHTML=`
-      <span class="wm" aria-hidden="true">${esc(String(l.depth||'').replace(/,/g,'').replace(/M$/i,''))}</span>
       <div class="entry-meta">
         <span>${esc(l.time)}</span><span>${esc(l.depth)}</span>
         <span class="type-chip">${TYPE_LABEL[l.type]||'RECORD'}</span>
@@ -3588,20 +3589,38 @@ function buildRail(){
     nodes.appendChild(b);
   });
 }
+/* --p 를 쓰는 요소들만 갱신 (문서 전체 재계산을 막음) */
+let pTargets = null, lastP = -1, railLabels = null;
 function updateDepth(){
   const max=document.body.scrollHeight-innerHeight;
   const p = max>0 ? Math.min(1, scrollY/max) : 0;
-  document.documentElement.style.setProperty('--p', p.toFixed(3));
+  if(Math.abs(p - lastP) < 0.0008) return;
+  lastP = p;
+  if(!pTargets) pTargets = [...document.querySelectorAll(
+    '.hum,.pressure-veil,.sunken,.sunken-rays,.sunkline,.rail,.hud-frame,.gauges')];
+  const pv = p.toFixed(3);
+  pTargets.forEach(el=>el.style.setProperty('--p', pv));
   depthOut.textContent = '-' + Math.round(p*MAX_DEPTH).toLocaleString() + ' M';
   depthOut.classList.toggle('deep', p>.55);
   statusOut.textContent = p<.2?'SIGNAL CLEAR':p<.5?'SIGNAL WEAKENING':p<.8?'HEAVY STATIC':'NO RESPONSE';
-  document.querySelectorAll('.rail-label').forEach(l=>
-    l.classList.toggle('on', p>=parseFloat(l.dataset.at)-.02));
+  if(!railLabels || !railLabels.length || !railLabels[0].isConnected)
+    railLabels = [...document.querySelectorAll('.rail-label')];
+  railLabels.forEach(l=> l.classList.toggle('on', p>=parseFloat(l.dataset.at)-.02));
   updateGauges(p);
   window.__p = p;
 }
-addEventListener('scroll', updateDepth, {passive:true});
-addEventListener('resize', updateDepth);
+/* 스크롤은 프레임당 한 번으로 묶어서 처리 */
+let scrollQueued = false;
+addEventListener('scroll', ()=>{
+  if(scrollQueued) return;
+  scrollQueued = true;
+  requestAnimationFrame(()=>{
+    scrollQueued = false;
+    updateDepth();
+    if(running && typeof parallax === 'function') parallax();
+  });
+}, {passive:true});
+addEventListener('resize', ()=>{ lastP = -1; updateDepth(); });
 
 /* ============ 파형 · 잡음 ============ */
 let running = true;
@@ -3613,8 +3632,10 @@ const wave=document.getElementById('wave'), wctx=wave.getContext('2d');
 function sizeWave(){ wave.width=Math.max(1,wave.clientWidth*2); wave.height=Math.max(1,wave.clientHeight*2); }
 addEventListener('resize', sizeWave);
 let t=0;
+let waveFrame = 0;
 function drawWave(){
   if(!running) return;
+  if(IS_TOUCH && (waveFrame++ & 1)){ requestAnimationFrame(drawWave); return; }
   const w=wave.width,h=wave.height,p=window.__p||0;
   wctx.clearRect(0,0,w,h);
   const amp=(h/2.6)*(1-p*.78), nz=p*(h/7);
@@ -3628,29 +3649,25 @@ function drawWave(){
   wctx.lineWidth=2; wctx.stroke(); t+=.045;
   requestAnimationFrame(drawWave);
 }
-const noise=document.getElementById('noise'), nctx=noise.getContext('2d');
-const NOISE_SCALE = IS_TOUCH ? 4 : 2;
-const NOISE_INTERVAL = IS_TOUCH ? 220 : 90;
-function sizeNoise(){
-  noise.width=Math.max(1,Math.ceil(innerWidth/NOISE_SCALE));
-  noise.height=Math.max(1,Math.ceil(innerHeight/NOISE_SCALE));
-}
-addEventListener('resize', sizeNoise);
-function drawNoise(){
-  if(!running) return;
-  const d=nctx.createImageData(noise.width,noise.height);
-  /* 모바일은 알갱이 대비를 낮춰 부드럽게 */
-  const base = IS_TOUCH ? 90 : 0;
-  const span = IS_TOUCH ? 110 : 255;
-  for(let i=0;i<d.data.length;i+=4){ const v = base + Math.random()*span;
-    d.data[i]=d.data[i+1]=d.data[i+2]=v; d.data[i+3]=255; }
-  nctx.putImageData(d,0,0);
-  scheduleNoise();
-}
-function scheduleNoise(){
-  clearTimeout(scheduleNoise._t);
-  scheduleNoise._t = setTimeout(()=>requestAnimationFrame(drawNoise), NOISE_INTERVAL);
-}
+/* 노이즈 — 180px 타일을 한 번만 만들어 배경으로 깔고, CSS 로 위치만 바꿈 */
+(function makeNoiseTile(){
+  const el = document.getElementById('noise');
+  if(!el) return;
+  const c = document.createElement('canvas');
+  c.width = c.height = 180;
+  const x = c.getContext('2d');
+  const d = x.createImageData(180,180);
+  const base = IS_TOUCH ? 90 : 0, span = IS_TOUCH ? 110 : 255;
+  for(let i=0;i<d.data.length;i+=4){
+    const v = base + Math.random()*span;
+    d.data[i]=d.data[i+1]=d.data[i+2]=v; d.data[i+3]=255;
+  }
+  x.putImageData(d,0,0);
+  el.style.backgroundImage = `url(${c.toDataURL()})`;
+  if(REDUCE) el.style.animation = 'none';
+})();
+function sizeNoise(){}
+function scheduleNoise(){}
 
 /* ============ 관리자 ============ */
 function tryAdmin(){
@@ -4235,30 +4252,42 @@ function buildMotes(){
     });
   }
 }
+/* 빛 알갱이 모양은 색마다 한 번만 그려둠 (매 프레임 그라데이션 생성 제거) */
+const moteSprite = {};
+function makeSprite(rgb){
+  const c = document.createElement('canvas'); c.width = c.height = 40;
+  const x = c.getContext('2d');
+  const g = x.createRadialGradient(20,20,0,20,20,20);
+  g.addColorStop(0, `rgba(${rgb},1)`);
+  g.addColorStop(.12, `rgba(${rgb},.9)`);
+  g.addColorStop(.35, `rgba(${rgb},.28)`);
+  g.addColorStop(1, `rgba(${rgb},0)`);
+  x.fillStyle = g; x.fillRect(0,0,40,40);
+  return c;
+}
+moteSprite.a = makeSprite('232,176,75');
+moteSprite.t = makeSprite('111,168,196');
+let moteFrame = 0;
 function drawMotes(){
   if(!running || REDUCE) return;
+  requestAnimationFrame(drawMotes);
+  /* 모바일은 30프레임으로 */
+  if(IS_TOUCH && (moteFrame++ & 1)) return;
   const p = window.__p || 0;
   mctx.clearRect(0,0,motes.width,motes.height);
   moteList.forEach(m=>{
-    m.y += m.vy; m.x += m.vx; m.ph += m.sp;
+    m.y += m.vy * (IS_TOUCH ? 2 : 1); m.x += m.vx * (IS_TOUCH ? 2 : 1); m.ph += m.sp;
     if(m.y < -6) m.y = motes.height + 6;
     if(m.y > motes.height + 6) m.y = -6;
     if(m.x < -6) m.x = motes.width + 6;
     if(m.x > motes.width + 6) m.x = -6;
-    /* 깊이 내려갈수록 더 또렷하게 반짝임 */
     const tw = (Math.sin(m.ph) + 1) / 2;
     const a = (0.16 + tw * 0.5) * (0.55 + p * 0.6);
-    const c = m.amber ? '232,176,75' : '111,168,196';
-    const g = mctx.createRadialGradient(m.x, m.y, 0, m.x, m.y, m.r * 5);
-    g.addColorStop(0, `rgba(${c},${(a).toFixed(3)})`);
-    g.addColorStop(.35, `rgba(${c},${(a*0.28).toFixed(3)})`);
-    g.addColorStop(1, `rgba(${c},0)`);
-    mctx.fillStyle = g;
-    mctx.beginPath(); mctx.arc(m.x, m.y, m.r*5, 0, Math.PI*2); mctx.fill();
-    mctx.fillStyle = `rgba(${c},${Math.min(1,a*1.5).toFixed(3)})`;
-    mctx.beginPath(); mctx.arc(m.x, m.y, m.r*.55, 0, Math.PI*2); mctx.fill();
+    const sz = m.r * 10;
+    mctx.globalAlpha = Math.min(1, a);
+    mctx.drawImage(m.amber ? moteSprite.a : moteSprite.t, m.x - sz/2, m.y - sz/2, sz, sz);
   });
-  requestAnimationFrame(drawMotes);
+  mctx.globalAlpha = 1;
 }
 
 /* ============ 레이더 · 계기 ============ */
@@ -4318,7 +4347,7 @@ function parallax(){
     img.style.transform = `scale(${sc}) translateY(${(mid * amt).toFixed(1)}px)`;
   });
 }
-addEventListener('scroll', ()=>{ if(running) parallax(); }, {passive:true});
+
 
 /* ============ 패널 버튼 고정 ============ */
 (function stickyPanelActions(){
